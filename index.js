@@ -1,7 +1,8 @@
-const local = require('./config/local');
+const ncp = require('ncp').ncp;
+
 const GitlabController = require('./api/controller/typescript/GitlabController');
 const GitlabService = require('./api/services/typescript/GitlabService');
-const recordTypeConfig = require('./config/recordType.js');
+const recordTypeConfig = require('./config/recordtype.js');
 const workflowConfig = require('./config/workflow.js');
 const recordFormConfig = require('./form-config/gitlab-1.0-draft.js');
 
@@ -20,13 +21,19 @@ module.exports = function (sails) {
       hook.numUnhandledRequestsSeen = 0;
 
       // if(env.production) {
-      //   fs.copySync('angular/gitlab/assets', '../../.tmp/public/angular/gitlab');
+      //   ncp('angular/gitlab/assets', '../../.tmp/public/angular/gitlab');
       // } else {
-        fs.copySync('angular/gitlab/src', '../../angular/gitlab');
       // }
-      // Signal that initialization of this hook is complete
-      // by calling the callback.
-      return cb();
+
+      ncp.limit = 16;
+      ncp('angular/gitlab/src', '../../angular/gitlab', function (err) {
+        if (err) {
+          return console.error(err);
+        }
+        // Signal that initialization of this hook is complete
+        // by calling the callback.
+        return cb();
+      });
     },
     routes: {
       after: {
@@ -49,7 +56,6 @@ module.exports = function (sails) {
       sails.config['GitlabService'] = GitlabService;
       Object.assign(sails.config.recordtype, recordTypeConfig);
       Object.assign(sails.config.workflow, workflowConfig);
-      Object.assign(sails.config.local, local);
       sails.config['form']['forms']['gitlab-1.0-draft.js'] = recordFormConfig;
     }
   }
