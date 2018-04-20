@@ -26,7 +26,7 @@ module.exports = function (sails) {
       // }
 
       ncp.limit = 16;
-      ncp('angular/gitlab/src', '../../angular/gitlab', function (err) {
+      ncp('node_modules/sails-hook-redbox-gitlab/angular/gitlab/src', '../../angular/gitlab', function (err) {
         if (err) {
           return console.error(err);
         }
