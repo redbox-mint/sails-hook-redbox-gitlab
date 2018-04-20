@@ -1,4 +1,3 @@
-const _ = require('./node_modules/lodash');
 const local = require('./config/local');
 const GitlabController = require('./api/controller/GitlabController');
 const GitlabService = require('./api/services/GitlabService');
@@ -48,9 +47,9 @@ module.exports = function (sails) {
     },
     configure: function () {
       sails.config['GitlabService'] = GitlabService;
-      sails.config = _.merge(sails.config, recordTypeConfig);
-      sails.config = _.merge(sails.config, workflowConfig);
-      sails.config.local = _.merge(sails.config.local, local);
+      Object.assign(sails.config.recordtype, recordTypeConfig);
+      Object.assign(sails.config.workflow, workflowConfig);
+      Object.assign(sails.config.local, local);
       sails.config['form']['forms']['gitlab-1.0-draft.js'] = recordFormConfig;
     }
   }
