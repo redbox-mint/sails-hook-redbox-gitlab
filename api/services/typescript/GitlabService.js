@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Rx_1 = require("rxjs/Rx");
-var services = require("../../typescript/services/CoreService.js");
+var services = require("../../../../../typescript/services/CoreService.js");
 var request = require("request-promise");
 var Services;
 (function (Services) {

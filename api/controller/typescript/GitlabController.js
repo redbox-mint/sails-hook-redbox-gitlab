@@ -13,7 +13,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Rx_1 = require("rxjs/Rx");
 require("rxjs/add/operator/map");
 var url = require('url');
-var controller = require("../../../typescript/controllers/CoreController.js");
+var local = require('../../../config/local');
+var controller = require("../../../../../typescript/controllers/CoreController.js");
 var Controllers;
 (function (Controllers) {
     var GitlabController = (function (_super) {
@@ -35,8 +36,8 @@ var Controllers;
                 'updateProject'
             ];
             _this.config = new Config();
-            var gitlabConfig = sails.config.local.workspaces.gitlab;
-            var workspaceConfig = sails.config.local.workspaces;
+            var gitlabConfig = local.workspaces.gitlab;
+            var workspaceConfig = local.workspaces;
             _this.config = {
                 host: gitlabConfig.host,
                 recordType: gitlabConfig.recordType,

@@ -3,13 +3,14 @@ declare var sails, Model;
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 const url = require('url');
+const local = require('../../../config/local');
 
 declare var GitlabService, BrandingService, WorkspaceService;
 /**
  * Package that contains all Controllers.
  */
 
-import controller = require('../../../typescript/controllers/CoreController.js');
+import controller = require('../../../../../typescript/controllers/CoreController.js');
 
 export module Controllers {
 
@@ -40,8 +41,8 @@ export module Controllers {
     constructor(){
       super();
       this.config = new Config();
-      const gitlabConfig = sails.config.local.workspaces.gitlab;
-      const workspaceConfig = sails.config.local.workspaces;
+      const gitlabConfig = local.workspaces.gitlab;
+      const workspaceConfig = local.workspaces;
       this.config = {
         host: gitlabConfig.host,
         recordType: gitlabConfig.recordType,

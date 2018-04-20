@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 //TODO: How to import this next line CoreService?
-import services = require('../../typescript/services/CoreService.js');
+import services = require('../../../../../typescript/services/CoreService.js');
 import { Sails, Model } from "sails";
 import * as request from "request-promise";
 
