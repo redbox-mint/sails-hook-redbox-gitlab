@@ -8,6 +8,7 @@ declare var GitlabService, BrandingService, WorkspaceService;
 /**
  * Package that contains all Controllers.
  */
+
 import controller = require('../../../typescript/controllers/CoreController.js');
 
 export module Controllers {
@@ -33,7 +34,7 @@ export module Controllers {
       'createWithTemplate',
       'project',
       'updateProject'
-    ]
+    ];
     protected config: Config;
 
     constructor(){

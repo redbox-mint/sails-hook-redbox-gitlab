@@ -137,7 +137,7 @@ export module Services {
         description: creation.description
       };
       if(creation.namespaceId) {
-        body.namespace_id = creation.namespaceId
+        body['namespace_id'] = creation.namespaceId
       }
       const post = request({
         uri: config.host + `/api/v4/projects?access_token=${token}`,

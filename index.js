@@ -50,7 +50,7 @@ module.exports = function (sails) {
       sails.config['GitlabService'] = GitlabService;
       sails.config = _.merge(sails.config, recordTypeConfig);
       sails.config = _.merge(sails.config, workflowConfig);
-      sails.config = _.merge(sails.config, local);
+      sails.config.local = _.merge(sails.config.local, local);
       sails.config['form']['forms']['gitlab-1.0-draft.js'] = recordFormConfig;
     }
   }
