@@ -20,7 +20,7 @@ module.exports = function (sails) {
         angularDest = 'test/angular/gitlab';
       }
       else {
-        angularOrigin = 'node_modules/sails-hook-redbox-gitlab/angular/gitlab/src';
+        angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/src';
         angularDest = 'angular/gitlab';
       }
       if (fs.existsSync(angularDest)) {
