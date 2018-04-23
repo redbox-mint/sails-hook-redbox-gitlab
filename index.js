@@ -11,16 +11,22 @@ const recordFormConfig = require('./form-config/gitlab-1.0-draft.js');
 module.exports = function (sails) {
   return {
     initialize: function (cb) {
+      let angularDest;
+      let angularOrigin;
       ncp.limit = 16;
-      //TODO: How to copy code and be able to test it at the same time??
-      //ncp('node_modules/sails-hook-redbox-gitlab/angular/gitlab/src', 'angular/gitlab', function (err) {
-      if (sails.config.environment !== 'test') {
-        return cb();
+      //To test run NODE_ENV=test mocha
+      if (sails.config.environment === 'test') {
+        angularOrigin = './app/gitlab/src';
+        angularDest = 'test/angular/gitlab';
       }
-      if (fs.existsSync('app/gitlab')) {
+      else {
+        angularOrigin = 'node_modules/sails-hook-redbox-gitlab/angular/gitlab/src';
+        angularDest = 'angular/gitlab';
+      }
+      if (fs.existsSync(angularDest)) {
         return cb();
       } else {
-        ncp('./app/gitlab/src', 'test/angular/gitlab', function (err) {
+        ncp(angularOrigin, angularDest, function (err) {
           if (err) {
             return console.error(err);
           }
@@ -34,7 +40,6 @@ module.exports = function (sails) {
         'get /:branding/:portal/ws/gitlab/user': GitlabController.user,
         'post /:branding/:portal/ws/gitlab/token': GitlabController.token,
         'get /:branding/:portal/ws/gitlab/revokeToken': GitlabController.revokeToken,
-        //'get /:branding/:portal/ws/gitlab/projects': GitlabController.projects,
         'get /:branding/:portal/ws/gitlab/projectsRelatedRecord': GitlabController.projectsRelatedRecord,
         'post /:branding/:portal/ws/gitlab/link': GitlabController.link,
         'post /:branding/:portal/ws/gitlab/checkRepo': GitlabController.checkRepo,
@@ -48,9 +53,9 @@ module.exports = function (sails) {
     },
     configure: function () {
       //sails.config['GitlabService'] = GitlabService;
-      sails.config['workflow'] = _.merge(sails.config['recordtype'], recordTypeConfig);
-      sails.config['workflow'] = _.merge(sails.config['workflow'], workflowConfig);
-      sails.config['form']['forms'] = _.merge(sails.config['form']['forms'], {forms: {'gitlab-1.0-draft.js': recordFormConfig}});
+      sails.config = _.merge(sails.config, recordTypeConfig);
+      sails.config = _.merge(sails.config, workflowConfig);
+      sails.config['form']['forms'] = _.merge(sails.config['form']['forms'], {'gitlab-1.0-draft': recordFormConfig});
     }
   }
 };

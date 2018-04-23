@@ -18,6 +18,7 @@ describe('Basic tests ::', function () {
         // Skip grunt (unless your hook uses it)
         "grunt": false
       },
+      form: { forms: {}}, //Mock forms to test hook.configure()
       log: {level: "error"}
     }, function (err, _sails) {
       if (err) return done(err);
