@@ -1,4 +1,6 @@
 const ncp = require('ncp').ncp;
+const fs = require('fs');
+const _ = require('lodash');
 
 const GitlabController = require('./api/controller/typescript/GitlabController');
 const GitlabService = require('./api/services/typescript/GitlabService');
@@ -7,40 +9,32 @@ const workflowConfig = require('./config/workflow.js');
 const recordFormConfig = require('./form-config/gitlab-1.0-draft.js');
 
 module.exports = function (sails) {
-
-  // Declare a var that will act as a reference to this hook.
-  var hook;
-
   return {
     initialize: function (cb) {
-      // Assign this hook object to the `hook` var.
-      // This allows us to add/modify values that users of the hook can retrieve.
-      hook = this;
-      // Initialize a couple of values on the hook.
-      hook.numRequestsSeen = 0;
-      hook.numUnhandledRequestsSeen = 0;
-
-      // if(env.production) {
-      //   ncp('angular/gitlab/assets', '../../.tmp/public/angular/gitlab');
-      // } else {
-      // }
-
       ncp.limit = 16;
-      ncp('node_modules/sails-hook-redbox-gitlab/angular/gitlab/src', '../../angular/gitlab', function (err) {
-        if (err) {
-          return console.error(err);
-        }
-        // Signal that initialization of this hook is complete
-        // by calling the callback.
+      //TODO: How to copy code and be able to test it at the same time??
+      //ncp('node_modules/sails-hook-redbox-gitlab/angular/gitlab/src', 'angular/gitlab', function (err) {
+      if (sails.config.environment !== 'test') {
         return cb();
-      });
+      }
+      if (fs.existsSync('app/gitlab')) {
+        return cb();
+      } else {
+        ncp('./app/gitlab/src', 'test/angular/gitlab', function (err) {
+          if (err) {
+            return console.error(err);
+          }
+          return cb();
+        });
+      }
     },
     routes: {
+      before: {},
       after: {
         'get /:branding/:portal/ws/gitlab/user': GitlabController.user,
         'post /:branding/:portal/ws/gitlab/token': GitlabController.token,
         'get /:branding/:portal/ws/gitlab/revokeToken': GitlabController.revokeToken,
-        'get /:branding/:portal/ws/gitlab/projects': GitlabController.projects,
+        //'get /:branding/:portal/ws/gitlab/projects': GitlabController.projects,
         'get /:branding/:portal/ws/gitlab/projectsRelatedRecord': GitlabController.projectsRelatedRecord,
         'post /:branding/:portal/ws/gitlab/link': GitlabController.link,
         'post /:branding/:portal/ws/gitlab/checkRepo': GitlabController.checkRepo,
@@ -53,10 +47,10 @@ module.exports = function (sails) {
       }
     },
     configure: function () {
-      sails.config['GitlabService'] = GitlabService;
-      Object.assign(sails.config.recordtype, recordTypeConfig);
-      Object.assign(sails.config.workflow, workflowConfig);
-      sails.config['form']['forms']['gitlab-1.0-draft.js'] = recordFormConfig;
+      //sails.config['GitlabService'] = GitlabService;
+      sails.config['workflow'] = _.merge(sails.config['recordtype'], recordTypeConfig);
+      sails.config['workflow'] = _.merge(sails.config['workflow'], workflowConfig);
+      sails.config['form']['forms'] = _.merge(sails.config['form']['forms'], {forms: {'gitlab-1.0-draft.js': recordFormConfig}});
     }
   }
 };

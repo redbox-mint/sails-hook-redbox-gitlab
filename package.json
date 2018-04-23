@@ -5,7 +5,7 @@
   "main": "index.js",
   "sails": {
     "isHook": true,
-    "hookName": "redbox-gitlab"
+    "hookName": "gitlab"
   },
   "scripts": {
     "test": "node_modules/.bin/mocha"
@@ -15,6 +15,7 @@
   "dependencies": {
     "lodash": "^4.17.5",
     "ncp": "^2.0.0",
+    "request": "^2.85.0",
     "request-promise": "^4.2.0",
     "rxjs": "5.4.1",
     "sails": "^1.0.0"

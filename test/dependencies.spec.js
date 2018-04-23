@@ -4,7 +4,6 @@ describe('Basic tests ::', function () {
 
   // Var to hold a running sails app instance
   var sails;
-
   // Before running any tests, attempt to lift Sails
   before(function (done) {
 

@@ -1,8 +1,10 @@
 import { Observable } from 'rxjs/Rx';
 //TODO: How to import this next line CoreService?
-import services = require('../../../../../typescript/services/CoreService.js');
+import services = require('../../core/typescript/services/CoreService');//'../../../../../typescript/services/CoreService.js');
 import { Sails, Model } from "sails";
-import * as request from "request-promise";
+const _ = require('lodash');
+var request = require('request');
+import * as requestPromise from "request-promise";
 
 declare var RecordsService, BrandingService;
 declare var sails: Sails;
@@ -37,7 +39,7 @@ export module Services {
     ];
 
     token(config: any, username: string, password: string) {
-      const post = request({
+      const post = requestPromise({
         uri: config.host + '/oauth/token',
         method: 'POST',
         body: {
@@ -49,7 +51,7 @@ export module Services {
     }
 
     user(config: any, token: string) {
-      const get = request({
+      const get = requestPromise({
         uri: config.host + `/api/v4/user?access_token=${token}`,
         json: true
       });
@@ -58,7 +60,7 @@ export module Services {
 
     project({config, token, pathWithNamespace}) {
       pathWithNamespace = encodeURIComponent(pathWithNamespace);
-      const get = request({
+      const get = requestPromise({
         uri: config.host + `/api/v4/projects/${pathWithNamespace}?access_token=${token}`,
         json: true
       });
@@ -66,7 +68,7 @@ export module Services {
     }
 
     projects({config, token}) {
-      const get = request({
+      const get = requestPromise({
         uri: config.host + `/api/v4/projects?membership=true&access_token=${token}`,
         json: true
       });
@@ -79,7 +81,7 @@ export module Services {
       if(!creation.group.isUser) {
         body = {namespace: creation.group.id};
       }
-      const post = request({
+      const post = requestPromise({
         uri: config.host + `/api/v4/projects/${origin}/fork?access_token=${token}`,
         method: 'POST',
         body: body,
@@ -90,7 +92,7 @@ export module Services {
 
     deleteForkRel(config: any, token: string, namespace: string, project: string) {
       const projectNameSpace = encodeURIComponent(namespace + '/' + project);
-      const deleteRequest = request({
+      const deleteRequest = requestPromise({
         uri: config.host + `/api/v4/projects/${projectNameSpace}/fork?access_token=${token}`,
         method: 'DELETE',
         json: true
@@ -100,7 +102,7 @@ export module Services {
 
     addWorkspaceInfo(config: any, token: string, branch: string, project: any, workspaceLink: string, filePath: string) {
       const projectNameSpace = encodeURIComponent(project.path_with_namespace);
-      const post = request({
+      const post = requestPromise({
         uri: config.host + `/api/v4/projects/${projectNameSpace}/repository/files/${filePath}?access_token=${token}`,
         method: 'POST',
         body: {
@@ -116,7 +118,7 @@ export module Services {
 
     readFileFromRepo(config: any, token: string, branch: string, projectNameSpace: string, filePath: string) {
       const encodeProjectNameSpace = encodeURIComponent(projectNameSpace);
-      const get = request({
+      const get = requestPromise({
         uri: config.host + `/api/v4/projects/${encodeProjectNameSpace}/repository/files/${filePath}?ref=${branch}&access_token=${token}&namespace=${encodeProjectNameSpace}`,
         json: true,
         method: 'GET',
@@ -139,7 +141,7 @@ export module Services {
       if(creation.namespaceId) {
         body['namespace_id'] = creation.namespaceId
       }
-      const post = request({
+      const post = requestPromise({
         uri: config.host + `/api/v4/projects?access_token=${token}`,
         method: 'POST',
         body: body,
@@ -152,7 +154,7 @@ export module Services {
       pathWithNamespace = encodeURIComponent(pathWithNamespace);
       const body = {};
       project.attributes.map(p => { body[p.name] = p.newValue; });
-      const put = request({
+      const put = requestPromise({
         uri: config.host + `/api/v4/projects/${pathWithNamespace}?access_token=${token}`,
         method: 'PUT',
         body: body,
@@ -162,7 +164,7 @@ export module Services {
     }
 
     groups(config: any, token: string) {
-      const get = request({
+      const get = requestPromise({
         uri: config.host + `/api/v4/groups?access_token=${token}`,
         json: true
       });
@@ -170,7 +172,7 @@ export module Services {
     }
 
     templates(config: any, token: string, templateTag: string) {
-      const get = request({
+      const get = requestPromise({
         uri: config.host + `/api/v4/projects?access_token=${token}`,
         json: true
       });

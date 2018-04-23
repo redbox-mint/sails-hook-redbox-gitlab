@@ -11,8 +11,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Rx_1 = require("rxjs/Rx");
-var services = require("../../../../../typescript/services/CoreService.js");
-var request = require("request-promise");
+var services = require("../../core/typescript/services/CoreService");
+var _ = require('lodash');
+var request = require('request');
+var requestPromise = require("request-promise");
 var Services;
 (function (Services) {
     var GitlabService = (function (_super) {
@@ -36,7 +38,7 @@ var Services;
             return _this;
         }
         GitlabService.prototype.token = function (config, username, password) {
-            var post = request({
+            var post = requestPromise({
                 uri: config.host + '/oauth/token',
                 method: 'POST',
                 body: {
@@ -47,7 +49,7 @@ var Services;
             return Rx_1.Observable.fromPromise(post);
         };
         GitlabService.prototype.user = function (config, token) {
-            var get = request({
+            var get = requestPromise({
                 uri: config.host + ("/api/v4/user?access_token=" + token),
                 json: true
             });
@@ -56,7 +58,7 @@ var Services;
         GitlabService.prototype.project = function (_a) {
             var config = _a.config, token = _a.token, pathWithNamespace = _a.pathWithNamespace;
             pathWithNamespace = encodeURIComponent(pathWithNamespace);
-            var get = request({
+            var get = requestPromise({
                 uri: config.host + ("/api/v4/projects/" + pathWithNamespace + "?access_token=" + token),
                 json: true
             });
@@ -64,7 +66,7 @@ var Services;
         };
         GitlabService.prototype.projects = function (_a) {
             var config = _a.config, token = _a.token;
-            var get = request({
+            var get = requestPromise({
                 uri: config.host + ("/api/v4/projects?membership=true&access_token=" + token),
                 json: true
             });
@@ -76,7 +78,7 @@ var Services;
             if (!creation.group.isUser) {
                 body = { namespace: creation.group.id };
             }
-            var post = request({
+            var post = requestPromise({
                 uri: config.host + ("/api/v4/projects/" + origin + "/fork?access_token=" + token),
                 method: 'POST',
                 body: body,
@@ -86,7 +88,7 @@ var Services;
         };
         GitlabService.prototype.deleteForkRel = function (config, token, namespace, project) {
             var projectNameSpace = encodeURIComponent(namespace + '/' + project);
-            var deleteRequest = request({
+            var deleteRequest = requestPromise({
                 uri: config.host + ("/api/v4/projects/" + projectNameSpace + "/fork?access_token=" + token),
                 method: 'DELETE',
                 json: true
@@ -95,7 +97,7 @@ var Services;
         };
         GitlabService.prototype.addWorkspaceInfo = function (config, token, branch, project, workspaceLink, filePath) {
             var projectNameSpace = encodeURIComponent(project.path_with_namespace);
-            var post = request({
+            var post = requestPromise({
                 uri: config.host + ("/api/v4/projects/" + projectNameSpace + "/repository/files/" + filePath + "?access_token=" + token),
                 method: 'POST',
                 body: {
@@ -110,7 +112,7 @@ var Services;
         };
         GitlabService.prototype.readFileFromRepo = function (config, token, branch, projectNameSpace, filePath) {
             var encodeProjectNameSpace = encodeURIComponent(projectNameSpace);
-            var get = request({
+            var get = requestPromise({
                 uri: config.host + ("/api/v4/projects/" + encodeProjectNameSpace + "/repository/files/" + filePath + "?ref=" + branch + "&access_token=" + token + "&namespace=" + encodeProjectNameSpace),
                 json: true,
                 method: 'GET',
@@ -133,7 +135,7 @@ var Services;
             if (creation.namespaceId) {
                 body['namespace_id'] = creation.namespaceId;
             }
-            var post = request({
+            var post = requestPromise({
                 uri: config.host + ("/api/v4/projects?access_token=" + token),
                 method: 'POST',
                 body: body,
@@ -145,7 +147,7 @@ var Services;
             pathWithNamespace = encodeURIComponent(pathWithNamespace);
             var body = {};
             project.attributes.map(function (p) { body[p.name] = p.newValue; });
-            var put = request({
+            var put = requestPromise({
                 uri: config.host + ("/api/v4/projects/" + pathWithNamespace + "?access_token=" + token),
                 method: 'PUT',
                 body: body,
@@ -154,14 +156,14 @@ var Services;
             return Rx_1.Observable.fromPromise(put);
         };
         GitlabService.prototype.groups = function (config, token) {
-            var get = request({
+            var get = requestPromise({
                 uri: config.host + ("/api/v4/groups?access_token=" + token),
                 json: true
             });
             return Rx_1.Observable.fromPromise(get);
         };
         GitlabService.prototype.templates = function (config, token, templateTag) {
-            var get = request({
+            var get = requestPromise({
                 uri: config.host + ("/api/v4/projects?access_token=" + token),
                 json: true
             });

@@ -25,11 +25,18 @@
   "include": [
     "typescript/**/*.ts",
     "api/**/*.ts",
+    "core/**/*.ts",
     "assets/angular/**/*.ts"
   ],
   "compileOnSave": true,
   "buildOnSave": false,
   "atom": {
     "rewriteTsconfig": false
+  },
+  "typeAcquisition": {
+    "include": [
+      "lodash"
+    ]
   }
 }
+

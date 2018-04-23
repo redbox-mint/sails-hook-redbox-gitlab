@@ -10,7 +10,7 @@ declare var GitlabService, BrandingService, WorkspaceService;
  * Package that contains all Controllers.
  */
 
-import controller = require('../../../../../typescript/controllers/CoreController.js');
+import controller = require('../../core/typescript/controllers/CoreController');//'../../../../../typescript/controllers/CoreController.js');
 
 export module Controllers {
 

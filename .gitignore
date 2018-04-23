@@ -42,3 +42,5 @@ e2e/*.map
 # System Files
 .DS_Store
 Thumbs.db
+
+test/angular

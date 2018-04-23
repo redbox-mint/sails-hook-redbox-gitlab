@@ -14,7 +14,7 @@ var Rx_1 = require("rxjs/Rx");
 require("rxjs/add/operator/map");
 var url = require('url');
 var local = require('../../../config/local');
-var controller = require("../../../../../typescript/controllers/CoreController.js");
+var controller = require("../../core/typescript/controllers/CoreController");
 var Controllers;
 (function (Controllers) {
     var GitlabController = (function (_super) {
