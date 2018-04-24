@@ -15,7 +15,7 @@ module.exports = function (sails) {
       let angularOrigin;
       ncp.limit = 16;
       //To test run NODE_ENV=test mocha
-      if (sails.config.environment === 'test') {
+      if (sails.config.environment === 'test') { //TODO: the environment is specific to the HOOK development/test
         angularOrigin = './app/gitlab/src';
         angularDest = 'test/angular/gitlab';
       }
@@ -34,6 +34,7 @@ module.exports = function (sails) {
         });
       }
     },
+    //If each route middleware do not exist sails.lift will fail during hook.load()
     routes: {
       before: {},
       after: {
