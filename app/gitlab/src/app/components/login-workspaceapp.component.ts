@@ -4,7 +4,6 @@ import { SimpleComponent } from '../../../shared/form/field-simple.component';
 import { FieldBase } from '../../../shared/form/field-base';
 import * as _ from "lodash-es";
 
-// STEST-22
 declare var jQuery: any;
 
 import { GitlabService } from '../gitlab.service';

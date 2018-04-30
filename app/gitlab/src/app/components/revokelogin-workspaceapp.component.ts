@@ -6,7 +6,6 @@ import * as _ from "lodash-es";
 
 import { GitlabService } from '../gitlab.service';
 
-// STEST-22
 declare var jQuery: any;
 
 /**

@@ -2,9 +2,10 @@ import { Input, Output, Component, OnInit, Inject, Injector, EventEmitter} from 
 import { SimpleComponent } from '../../../shared/form/field-simple.component';
 import { FieldBase } from '../../../shared/form/field-base';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import * as _ from "lodash-es";
 
 import { GitlabService } from '../gitlab.service';
+
+declare var jQuery: any;
 
 /**
  * Contributor Model

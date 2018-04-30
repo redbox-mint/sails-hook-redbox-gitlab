@@ -5,8 +5,8 @@ module.exports = {
   name: 'gitlab-1.0-draft',
   type: 'gitlab',
   customAngularApp: {
-    appName: 'gitlab',
-    appSelector: 'gitlab-form'
+    'appName': 'gitlab',
+    'appSelector': 'gitlab-form'
   },
   skipValidationOnSave: true,
   editCssClasses: 'row col-md-12',

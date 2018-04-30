@@ -13,6 +13,8 @@ import { CreateWorkspaceComponent } from './components/create-workspace.componen
 import { RevokeLoginWorkspaceAppComponent } from './components/revokelogin-workspaceapp.component';
 import { LinkModalWorkspaceComponent } from './components/linkmodal-workspace.component';
 
+import * as jQuery from 'jquery';
+
 @NgModule({
   imports: [ BrowserModule, HttpModule, ReactiveFormsModule,
     SharedModule, FormsModule
