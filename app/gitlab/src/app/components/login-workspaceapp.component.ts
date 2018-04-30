@@ -4,16 +4,17 @@ import { SimpleComponent } from '../../../shared/form/field-simple.component';
 import { FieldBase } from '../../../shared/form/field-base';
 import * as _ from "lodash-es";
 
-import * as jQuery from 'jquery';
+// STEST-22
+declare var jQuery: any;
 
 import { GitlabService } from '../gitlab.service';
 
 /**
-* Contributor Model
-*
-* @author <a target='_' href='https://github.com/moisbo'>moisbo</a>
-*
-*/
+ * Contributor Model
+ *
+ * @author <a target='_' href='https://github.com/moisbo'>moisbo</a>
+ *
+ */
 export class LoginWorkspaceAppField extends FieldBase<any> {
 
   showHeader: boolean;
@@ -94,7 +95,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
 
   validate(value: any) {
     if(value.username && value.password) {
-      jQuery('#loginPermissionModal')['modal']('show');
+      jQuery('#loginPermissionModal').modal('show');
     }else {
       this.loginError = true;
     }
@@ -102,13 +103,13 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
 
   allow(value: any) {
     //this.loginSubmitted.emit(value);
-    jQuery('#loginPermissionModal')['modal']('hide');
+    jQuery('#loginPermissionModal').modal('hide');
     this.gitlabService.token(value).then((response: any) => {
-      if(response.status){
+      if(!response.status){
+        this.displayLoginMessage({error: true, value: response.error.error_description});
+      } else {
         this.displayLoginMessage({error: false, value: ''});
         this.userInfo();
-      } else {
-        this.displayLoginMessage({error: true, value: response.error.error_description});
       }
     });
   }
@@ -120,68 +121,68 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
 
   userInfo() {
     this.gitlabService.user()
-    .then(response => {
-      if (response && response.status) {
-        this.listWorkspaces.emit(response.user);
-      } else {
-        // show login page because it cannot login via workspace apps
-        this.displayLoginMessage({error: true, value: response.error.error_description});
-        this.loggedIn = false;
-        // this.setLoading(false);
-      }
-    });
+      .then(response => {
+        if (response && response.status) {
+          this.listWorkspaces.emit(response.user);
+        } else {
+          // show login page because it cannot login via workspace apps
+          this.displayLoginMessage({error: true, value: response.error.error_description});
+          this.loggedIn = false;
+          // this.setLoading(false);
+        }
+      });
   }
 
 }
 
 
 /**
-* Component that log's in to a workspace app
-*
-*/
+ * Component that log's in to a workspace app
+ *
+ */
 @Component({
   selector: 'ws-login',
   template: `
-  <div *ngIf="!field.loggedIn && field.isLoaded" class="padding-bottom-10">
-    <div class="row">
-      <h4>{{ field.permissionStep }}</h4>
-      <form #form="ngForm"  novalidate autocomplete="off">
-        <div class="form-group">
-          <label>{{ field.usernameLabel }}</label>
-          <input type="text" class="form-control" name="username" ngModel>
-        </div>
-        <div class="form-group">
-          <label>{{ field.passwordLabel }}</label>
-          <input type="password" class="form-control" name="password" ngModel>
-        </div>
-        <button (click)="field.validate(form.value)" class="btn btn-primary"
-        type="submit">{{ field.loginLabel }}</button>
-        <div class="row"><br/></div>
-        <div class="alert alert-danger" *ngIf="field.loginError">
-          {{field.loginErrorMessage}}
-        </div>
-      </form>
-    </div>
-    <div id="loginPermissionModal" class="modal fade">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">{{ field.permissionLabel }}</h4>
+    <div *ngIf="!field.loggedIn && field.isLoaded" class="padding-bottom-10">
+      <div class="">
+        <h4>{{ field.permissionStep }}</h4>
+        <form #form="ngForm"  novalidate autocomplete="off">
+          <div class="form-group">
+            <label>{{ field.usernameLabel }}</label>
+            <input type="text" class="form-control" name="username" ngModel>
           </div>
-          <div class="modal-body">
-          <p>{{ field.permissionStep }}</p>
-          <ul>
-            <li *ngFor="let permission of field.permissionList">{{ permission }}</li>
-          </ul>
+          <div class="form-group">
+            <label>{{ field.passwordLabel }}</label>
+            <input type="password" class="form-control" name="password" ngModel>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="field.allow(form.value)">{{ field.allowLabel }}</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ field.closeLabel }}</button>
+          <button (click)="field.validate(form.value)" class="btn btn-primary"
+                  type="submit">{{ field.loginLabel }}</button>
+          <div class="row"><br/></div>
+          <div class="alert alert-danger" *ngIf="field.loginError">
+            {{field.loginErrorMessage}}
+          </div>
+        </form>
+      </div>
+      <div id="loginPermissionModal" class="modal fade">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">{{ field.permissionLabel }}</h4>
+            </div>
+            <div class="modal-body">
+              <p>{{ field.permissionStep }}</p>
+              <ul>
+                <li *ngFor="let permission of field.permissionList">{{ permission }}</li>
+              </ul>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" (click)="field.allow(form.value)">{{ field.allowLabel }}</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ field.closeLabel }}</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
   `
 })
 export class LoginWorkspaceAppComponent extends SimpleComponent {

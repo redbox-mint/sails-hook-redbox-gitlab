@@ -165,14 +165,14 @@ var Controllers;
                 return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
                     .flatMap(function (response) {
                     gitlab = response.info;
-                    return GitlabService.projects({ config: _this.config, token: gitlab.accessToken.access_token });
+                    return GitlabService.projects({ config: _this.config, token: gitlab['accessToken'].access_token });
                 })
                     .flatMap(function (response) {
                     var obs = [];
                     currentProjects = response.slice(0);
                     for (var _i = 0, currentProjects_1 = currentProjects; _i < currentProjects_1.length; _i++) {
                         var r = currentProjects_1[_i];
-                        obs.push(GitlabService.readFileFromRepo(_this.config, gitlab.accessToken.access_token, branch_1, r.path_with_namespace, 'stash.workspace'));
+                        obs.push(GitlabService.readFileFromRepo(_this.config, gitlab['accessToken'].access_token, branch_1, r.path_with_namespace, 'stash.workspace'));
                     }
                     return Rx_1.Observable.merge.apply(Rx_1.Observable, obs);
                 })
@@ -183,7 +183,7 @@ var Controllers;
                         info: parsedResponse.content ? _this.workspaceInfoFromRepo(parsedResponse.content) : {}
                     });
                 }, function (error) {
-                    var errorMessage = "Failed to get projectsRelatedRecord for token: " + gitlab.accessToken.access_token;
+                    var errorMessage = "Failed to get projectsRelatedRecord for token: " + gitlab['accessToken'].access_token;
                     sails.log.debug(errorMessage);
                     _this.ajaxFail(req, res, errorMessage, error);
                 }, function () {
@@ -205,6 +205,7 @@ var Controllers;
             else {
                 this.config.brandingAndPortalUrl = sails.getBaseUrl() + BrandingService.getBrandAndPortalPath(req);
                 var project_1 = req.param('project');
+                var pathWithNamespace_1 = req.param('pathWithNamespace');
                 var rdmpId_1 = req.param('rdmpId');
                 var recordMap_1 = req.param('recordMap');
                 var branch_2 = req.param('branch') || 'master';
@@ -224,7 +225,12 @@ var Controllers;
                 }).flatMap(function (response) {
                     workspaceId_1 = response.oid;
                     sails.log.debug('addWorkspaceInfo');
-                    return GitlabService.addWorkspaceInfo(_this.config, gitlab_1.accessToken.access_token, branch_2, project_1, rdmpId_1 + '.' + workspaceId_1, 'stash.workspace');
+                    return GitlabService.addWorkspaceInfo({
+                        config: _this.config, token: gitlab_1['accessToken'].access_token,
+                        branch: branch_2, pathWithNamespace: pathWithNamespace_1,
+                        project: project_1, workspaceLink: rdmpId_1 + '.' + workspaceId_1,
+                        filePath: 'stash.workspace'
+                    });
                 })
                     .flatMap(function (response) {
                     sails.log.debug('addParentRecordLink');
@@ -243,6 +249,7 @@ var Controllers;
                     .subscribe(function (response) {
                     sails.log.debug('updateRecordMeta');
                     sails.log.debug(response);
+                    response.status = true;
                     _this.ajaxOk(req, res, null, response);
                 }, function (error) {
                     sails.log.error(error);
@@ -329,6 +336,7 @@ var Controllers;
                     return GitlabService.create(_this.config, gitlab.accessToken.access_token, creation);
                 }).subscribe(function (response) {
                     sails.log.debug('updateRecordMeta');
+                    response.status = true;
                     _this.ajaxOk(req, res, null, response);
                 }, function (error) {
                     sails.log.error(error);
@@ -353,6 +361,7 @@ var Controllers;
                     return GitlabService.fork(_this.config, gitlab.accessToken.access_token, creation_1);
                 }).subscribe(function (response) {
                     sails.log.debug('fork');
+                    response.status = true;
                     _this.ajaxOk(req, res, null, response);
                 }, function (error) {
                     sails.log.error(error);
@@ -382,6 +391,7 @@ var Controllers;
                     return GitlabService.updateProject(_this.config, gitlab.accessToken.access_token, projectId_1, project_2);
                 }).subscribe(function (response) {
                     sails.log.debug('updateProject');
+                    response.status = true;
                     _this.ajaxOk(req, res, null, response);
                 }, function (error) {
                     sails.log.error(error);
@@ -403,10 +413,11 @@ var Controllers;
                 return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
                     .flatMap(function (response) {
                     var gitlab = response.info;
-                    return GitlabService.project({ config: _this.config, token: gitlab.accessToken.access_token, projectNameSpace: pathWithNamespace });
+                    return GitlabService.project({ config: _this.config, token: gitlab.accessToken.access_token, pathWithNamespace: pathWithNamespace });
                 })
                     .subscribe(function (response) {
                     sails.log.debug('project');
+                    response.status = true;
                     _this.ajaxOk(req, res, null, response);
                 }, function (error) {
                     sails.log.error(error);

@@ -47,18 +47,17 @@ export class ListWorkspaceDataField extends FieldBase<any> {
     this.syncLabel = options['syncLabel'] || 'Sync';
     var relatedObjects = this.relatedObjects;
     this.value = options['value'] || this.setEmptyValue();
-
     this.relatedObjects = [];
     this.failedObjects = [];
     this.accessDeniedObjects = [];
-
+    this.loading = true;
   }
 
   registerEvents() {
-    this.fieldMap['LoginWorkspaceApp'].field['listWorkspaces'].subscribe(this.listWorkspaces.bind(this));    //TODO: this next line doesnt work because of when the form is being built
+//    this.fieldMap['LoginWorkspaceApp'].field['listWorkspaces'].subscribe(this.listWorkspaces.bind(this));    //TODO: this next line doesnt work because of when the form is being built
+    this.fieldMap['CreateWorkspace'].field['listWorkspaces'].subscribe(this.listWorkspaces.bind(this));
+    this.fieldMap['LinkModal'].field['listWorkspaces'].subscribe(this.listWorkspaces.bind(this));
     this.fieldMap['RevokeLogin'].field['revokePermissions'].subscribe(this.revoke.bind(this));
-    //let that = this;
-    //this.fieldMap._rootComp['loginMessage'].subscribe(that.displayLoginMessage);
   }
 
   init(){
@@ -74,11 +73,11 @@ export class ListWorkspaceDataField extends FieldBase<any> {
       this.value = valueElem;
     }
 
-      this.formModel = new FormControl(this.value || []);
+    this.formModel = new FormControl(this.value || []);
 
-      if (this.value) {
-        this.setValue(this.value);
-      }
+    if (this.value) {
+      this.setValue(this.value);
+    }
 
     return this.formModel;
   }
@@ -101,19 +100,19 @@ export class ListWorkspaceDataField extends FieldBase<any> {
         this.setWorkspaceUser.emit(this.user);
         this.workspaces = [];
         return this.gitlabService.projectsRelatedRecord()
-        .then(response => {
-          this.loading = false;
-          this.loggedIn = this.fieldMap._rootComp.loggedIn = true;
-          this.workspaces = response;
-          this.checkLoggedIn.emit(true);
-        });
+          .then(response => {
+            this.loading = false;
+            this.loggedIn = this.fieldMap._rootComp.loggedIn = true;
+            this.workspaces = response;
+            this.checkLoggedIn.emit(true);
+          });
       } else {
         this.loggedIn = this.fieldMap._rootComp.loggedIn = false;
         this.loading = false;
         this.checkLoggedIn.emit(false);
       }
-  });
-}
+    });
+  }
 
   linkWorkspace(item) {
     this.linkModal.emit({rdmp: this.fieldMap._rootComp.rdmp, workspace: item});
@@ -129,8 +128,8 @@ if(typeof aotMode == 'undefined') {
 }
 
 /**
-* Component to display information from related objects within ReDBox
-*/
+ * Component to display information from related objects within ReDBox
+ */
 @Component({
   selector: 'ws-listworkspaces',
   templateUrl: wsListWorkspaceDataTemplate

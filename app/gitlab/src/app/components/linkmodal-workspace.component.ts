@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, Inject, Injector} from '@angular/core';
+import { Input, Component, OnInit, Inject, Injector, EventEmitter } from '@angular/core';
 import { SimpleComponent } from '../../../shared/form/field-simple.component';
 import { FieldBase } from '../../../shared/form/field-base';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -10,11 +10,11 @@ import { GitlabService } from '../gitlab.service';
 import * as jQuery from 'jquery';
 
 /**
-* Contributor Model
-*
-* @author <a target='_' href='https://github.com/moisbo'>moisbo</a>
-*
-*/
+ * Contributor Model
+ *
+ * @author <a target='_' href='https://github.com/moisbo'>moisbo</a>
+ *
+ */
 export class LinkModalWorkspaceField extends FieldBase<any> {
 
   showHeader: boolean;
@@ -42,6 +42,8 @@ export class LinkModalWorkspaceField extends FieldBase<any> {
   checkBranch: string;
   checks: Checks;
   linkCreated: boolean;
+
+  @Output() listWorkspaces: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(options: any, injector: any) {
     super(options, injector);
@@ -92,77 +94,78 @@ export class LinkModalWorkspaceField extends FieldBase<any> {
 
   linkModal({rdmp, workspace}) {
     this.currentWorkspace = workspace;
-    jQuery('#linkModal')['modal']('show');
+    this.checks.clear();
+    jQuery('#linkModal').modal('show');
     this.processing = true;
     this.gitlabService.checkRepo(
       this.currentWorkspace[this.checkField], this.checkBranch
-    ).then(response =>{
+    ).then(response => {
       console.log('checkRepo');
       console.log(response);
       this.checks.master = true;
       return this.gitlabService.link({rdmp: rdmp,
-        branch: this.checkBranch, currentWorkspace:this.currentWorkspace,
+        branch: this.checkBranch, pathWithNamespace: this.currentWorkspace['path_with_namespace'],
+        currentWorkspace: this.currentWorkspace,
         recordMap: this.recordMap
       });
     }).then(response => {
-      console.log('link');
-      console.log(response);
-        if(response.error && response.error.message) {
-          this.processingStatus = 'done';
-          this.processingFail = response.error.message;
-        } else{
-          this.linkCreated = true;
-        }
-        this.processing = false;
-      })
+      if(response.error && response.error.message) {
+        this.processingStatus = 'done';
+        this.processingFail = response.error.message;
+      } else {
+        this.checks.linkCreated = true;
+      }
+      this.processing = false;
+      this.listWorkspaces.emit();
+    })
       .catch(error => {
         this.processingStatus = 'done';
         this.processingFail = error.error.message;
         this.processing = false;
       })
-    }
+  }
 }
 /**
-* Component that Links Workspaces to Workspace Records in Stash
-*/
+ * Component that Links Workspaces to Workspace Records in Stash
+ */
 @Component({
   selector: 'ws-linkmodal',
   template: `
-  <div id="linkModal" class="modal fade" data-keyboard="false">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">{{ field.linkModalTitle }}</h4>
-        </div>
-        <div class="modal-body">
-          <h5>{{ field.workspaceDetailsTitle }}</h5>
-          <p *ngFor="let item of field.workspaceDefinition">{{ item.label }} : {{ field.currentWorkspace[item.name] }}</p>
-          <h5>{{ field.processingLabel }}</h5>
-          <p>{{ field.processingMessage }}&nbsp;<span *ngIf="field.checks.master; then isDone; else isSpinning"></span></p>
-          <p *ngIf="field.checks.comparing">{{ field.comparingLabel }}&nbsp;<span *ngIf="field.checks.link; then isDone; else isSpinning"></span></p>
-          <p *ngIf="field.checks.link == false">{{ field.statusLabel }}&nbsp;<span *ngIf="field.checks.rdmp; then isDone; else isSpinning"></span></p>
-          <p class="alert alert-success" *ngIf="field.checks.linkCreated">{{ field.processingSuccess }}</p>
-          <p class="alert alert-danger" *ngIf="field.checks.linkWithOther">{{ field.processingFail }}</p>
-          <p class="alert alert-danger" *ngIf="field.processingStatus === 'done' && field.processingFail">{{ field.processingFail }}</p>
-          <ng-template #isDone>
-            <i class="fa fa-check-circle"></i>
-          </ng-template>
-          <ng-template #isSpinning>
-            <i class="fa fa-spinner fa-spin"></i>
-          </ng-template>
-        </div>
-        <div class="modal-footer">
-          <span *ngIf="field.processing; then waitForProcessing; else finishProcessing"></span>
-          <ng-template #finishProcessing>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ field.closeLabel }}</button>
-          </ng-template>
-          <ng-template #waitForProcessing>
-            <button type="button" class="btn btn-secondary disabled" data-dismiss="modal">{{ field.closeLabel }}</button>
-          </ng-template>
+    <div id="linkModal" class="modal fade" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{ field.linkModalTitle }}</h4>
+          </div>
+          <div class="modal-body">
+            <h5>{{ field.workspaceDetailsTitle }}</h5>
+            <p *ngFor="let item of field.workspaceDefinition">{{ item.label }} : {{ field.currentWorkspace[item.name] }}</p>
+            <h5>{{ field.processingLabel }}</h5>
+            <p>{{ field.processingMessage }}&nbsp;<span *ngIf="field.checks.master; then isDone; else isSpinning"></span></p>
+            <p *ngIf="field.checks.comparing">{{ field.comparingLabel }}&nbsp;<span *ngIf="field.checks.link; then isDone; else isSpinning"></span></p>
+            <p *ngIf="field.checks.link == false">{{ field.statusLabel }}&nbsp;<span *ngIf="field.checks.rdmp; then isDone; else isSpinning"></span></p>
+            <p class="alert alert-success" *ngIf="field.checks.linkCreated">{{ field.processingSuccess }}</p>
+            <p class="alert alert-danger" *ngIf="field.checks.linkWithOther">{{ field.processingFail }}</p>
+            <p class="alert alert-danger" *ngIf="field.processingStatus === 'done' && field.processingFail">{{ field.processingFail }}</p>
+            <ng-template #isDone>
+              <i class="fa fa-check-circle"></i>
+            </ng-template>
+            <ng-template #isSpinning>
+              <i class="fa fa-spinner fa-spin"></i>
+            </ng-template>
+          </div>
+          <div class="modal-footer">
+            <span *ngIf="field.processing; then waitForProcessing; else finishProcessing"></span>
+            <ng-template #finishProcessing>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ field.closeLabel }}</button>
+            </ng-template>
+            <ng-template #waitForProcessing>
+              <button type="button" class="btn btn-secondary disabled" data-dismiss="modal">{{ field.closeLabel }}</button>
+            </ng-template>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   `
 })
 export class LinkModalWorkspaceComponent extends SimpleComponent {

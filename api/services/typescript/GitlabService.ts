@@ -2,9 +2,7 @@ import { Observable } from 'rxjs/Rx';
 //TODO: How to import this next line CoreService?
 import services = require('../../core/typescript/services/CoreService');//'../../../../../typescript/services/CoreService.js');
 import { Sails, Model } from "sails";
-const _ = require('lodash');
-var request = require('request');
-import * as requestPromise from "request-promise";
+import * as requestPromise from "requestPromise-promise";
 
 declare var RecordsService, BrandingService;
 declare var sails: Sails;
@@ -26,6 +24,7 @@ export module Services {
     protected _exportedMethods: any = [
       'token',
       'user',
+      'project',
       'projects',
       'readFileFromRepo',
       'revokeToken',
@@ -36,7 +35,7 @@ export module Services {
       'groups',
       'templates',
       'addWorkspaceInfo'
-    ];
+    ]
 
     token(config: any, username: string, password: string) {
       const post = requestPromise({
@@ -100,8 +99,8 @@ export module Services {
       return Observable.fromPromise(deleteRequest);
     }
 
-    addWorkspaceInfo(config: any, token: string, branch: string, project: any, workspaceLink: string, filePath: string) {
-      const projectNameSpace = encodeURIComponent(project.path_with_namespace);
+    addWorkspaceInfo({config, token, branch, pathWithNamespace, project, workspaceLink, filePath}) {
+      const projectNameSpace = encodeURIComponent(pathWithNamespace);
       const post = requestPromise({
         uri: config.host + `/api/v4/projects/${projectNameSpace}/repository/files/${filePath}?access_token=${token}`,
         method: 'POST',
@@ -139,7 +138,7 @@ export module Services {
         description: creation.description
       };
       if(creation.namespaceId) {
-        body['namespace_id'] = creation.namespaceId
+        body.namespace_id = creation.namespaceId
       }
       const post = requestPromise({
         uri: config.host + `/api/v4/projects?access_token=${token}`,

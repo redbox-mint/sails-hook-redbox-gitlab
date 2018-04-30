@@ -20,11 +20,11 @@ import * as jQuery from 'jquery';
 
 
 /**
-* Main Gitlab Edit component
-*
-* @author <a target='_' href='https://github.com/moisbo'>moisbo</a>
-*
-*/
+ * Main Gitlab Edit component
+ *
+ * @author <a target='_' href='https://github.com/moisbo'>moisbo</a>
+ *
+ */
 @Component({
   moduleId: module.id,
   selector: 'gitlab-form',
@@ -33,68 +33,68 @@ import * as jQuery from 'jquery';
 })
 export class GitlabFormComponent extends LoadableComponent {
   /**
-  * The OID for this Form.
-  *
-  */
+   * The OID for this Form.
+   *
+   */
   @Input() oid: string;
   /**
-  * Edit mode
-  *
-  */
+   * Edit mode
+   *
+   */
   @Input() editMode: boolean;
   /**
-  * The Record type
-  *
-  */
+   * The Record type
+   *
+   */
   @Input() recordType: string;
   /**
-  * Fields for the form
-  */
+   * Fields for the form
+   */
   fields: any[] = [];
   /**
-  * Form group
-  */
+   * Form group
+   */
   form: FormGroup;
   /**
-  * Initialization subscription
-  */
+   * Initialization subscription
+   */
   initSubs: any;
   /**
-  * Field map
-  */
+   * Field map
+   */
   fieldMap: any;
   /**
-  * Form JSON string
-  */
+   * Form JSON string
+   */
   payLoad: any;
   /**
-  * Form status
-  */
+   * Form status
+   */
   status: any;
   /**
-  * Critical error message
-  */
+   * Critical error message
+   */
   criticalError: any;
   /**
-  * Form definition
-  */
+   * Form definition
+   */
   formDef: any;
   /**
-  * CSS classes for this form
-  */
+   * CSS classes for this form
+   */
   cssClasses: any;
   /**
-  * Flag when form needs saving.
-  *
-  */
+   * Flag when form needs saving.
+   *
+   */
   needsSave: boolean;
   /**
-  * Links to tabs
-  */
+   * Links to tabs
+   */
   failedValidationLinks: any[];
   /**
-  * Expects a number of DI'ed elements.
-  */
+   * Expects a number of DI'ed elements.
+   */
 
   login: any;
   loading: boolean = false;
@@ -152,15 +152,13 @@ export class GitlabFormComponent extends LoadableComponent {
         } else {
           this.cssClasses = this.formDef.viewCssClasses;
         }
-        //TODO: here put is loggedIn
         this.loggedIn = false;
         if (form.fieldsMeta) {
           this.fields = form.fieldsMeta;
           this.rebuildForm();
           this.watchForChanges();
-          //TODO: check if this is correct. list-workspaces is ngAfterContentInit to start
-          //this.listWorkspaces.emit();
           this.registerEvents();
+          this.fieldMap['BackToPlan'].field.value = this.fieldMap['BackToPlan'].field.value + this.rdmp;
         }
       });
     }).catch((err:any) => {

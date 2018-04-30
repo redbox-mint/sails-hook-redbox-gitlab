@@ -6,15 +6,15 @@ import * as _ from "lodash-es";
 
 import { GitlabService } from '../gitlab.service';
 
-import * as jQuery from 'jquery';
-
+// STEST-22
+declare var jQuery: any;
 
 /**
-* Contributor Model
-*
-* @author <a target='_' href='https://github.com/moisbo'>moisbo</a>
-*
-*/
+ * Contributor Model
+ *
+ * @author <a target='_' href='https://github.com/moisbo'>moisbo</a>
+ *
+ */
 export class RevokeLoginWorkspaceAppField extends FieldBase<any> {
 
   showHeader: boolean;
@@ -73,52 +73,52 @@ export class RevokeLoginWorkspaceAppField extends FieldBase<any> {
   }
 
   revokeModal() {
-    jQuery('#revokeModal')['modal']('show');
+    jQuery('#revokeModal').modal('show');
   }
 
   revoke() {
     this.gitlabService.revokeToken()
-    .then(response => {
-      this.loggedIn = false;
-      this.revokePermissions.emit();
-      jQuery('#revokeModal')['modal']('hide');
-    })
-    .catch(error => {
-      console.log(error);
-    });
+      .then(response => {
+        this.loggedIn = false;
+        this.revokePermissions.emit();
+        jQuery('#revokeModal').modal('hide');
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
 }
 
 /**
-* Component that RevokeLogin to a workspace app
-*
-*
-*/
+ * Component that RevokeLogin to a workspace app
+ *
+ *
+ */
 @Component({
   selector: 'ws-revokelogin',
   template: `
-  <div *ngIf="field.loggedIn" class="padding-bottom-10">
-    <div class="row">
-      <button type="button" class="btn btn-danger" (click)="field.revokeModal()">{{ field.revokeLabel }}</button>
+    <div *ngIf="field.loggedIn" class="padding-bottom-10">
+      <div class="">
+        <button type="button" class="btn btn-danger" (click)="field.revokeModal()">{{ field.revokeLabel }}</button>
+      </div>
     </div>
-  </div>
-  <div id="revokeModal" class="modal fade">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">{{ field.permissionRevokeTitle }}</h4>
-        </div>
-        <div class="modal-body">
-          <p>{{ field.permissionRevoke }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click)="field.revoke()">{{ field.revokeLabel }}</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ field.closeLabel }}</button>
+    <div id="revokeModal" class="modal fade">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{ field.permissionRevokeTitle }}</h4>
+          </div>
+          <div class="modal-body">
+            <p>{{ field.permissionRevoke }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="field.revoke()">{{ field.revokeLabel }}</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ field.closeLabel }}</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   `
 })
 export class RevokeLoginWorkspaceAppComponent extends SimpleComponent {

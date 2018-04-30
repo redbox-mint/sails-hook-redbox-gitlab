@@ -11,6 +11,11 @@ export class Checks {
   linkWithOther: boolean = false;
   master: boolean = false;
   comparing: boolean = false;
+
+  clear() {
+    this.linkCreated = false;
+    this.linkWithOther = false;
+  }
 }
 
 export class Group {
@@ -25,6 +30,7 @@ export class Template {
 }
 
 export class Creation {
+  id: string;
   created: boolean = false;
   name: string = '';
   namespace: string;
@@ -37,13 +43,31 @@ export class Creation {
   clear() {
     this.description = '';
     this.name = '';
+    this.id = '';
+  }
+
+  nameHasSpaces() {
+    return /\s/g.test(this.name);
   }
 }
 
 export class CreationAlert {
-  message: string;
-  creationAlert: string = '';
-  class: string;
+  message: string = '';
+  className: string = 'danger';
+  status: string = '';
+
+  set({message, status, className}) {
+    this.message = message;
+    this.status = status;
+    this.className = className;
+  }
+
+  clear() {
+    this.message = '';
+    this.className = 'danger';
+    this.status = '';
+  }
+
 }
 
 export class CurrentWorkspace {

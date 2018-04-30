@@ -12,9 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Rx_1 = require("rxjs/Rx");
 var services = require("../../core/typescript/services/CoreService");
-var _ = require('lodash');
-var request = require('request');
-var requestPromise = require("request-promise");
+var requestPromise = require("requestPromise-promise");
 var Services;
 (function (Services) {
     var GitlabService = (function (_super) {
@@ -24,6 +22,7 @@ var Services;
             _this._exportedMethods = [
                 'token',
                 'user',
+                'project',
                 'projects',
                 'readFileFromRepo',
                 'revokeToken',
@@ -95,8 +94,9 @@ var Services;
             });
             return Rx_1.Observable.fromPromise(deleteRequest);
         };
-        GitlabService.prototype.addWorkspaceInfo = function (config, token, branch, project, workspaceLink, filePath) {
-            var projectNameSpace = encodeURIComponent(project.path_with_namespace);
+        GitlabService.prototype.addWorkspaceInfo = function (_a) {
+            var config = _a.config, token = _a.token, branch = _a.branch, pathWithNamespace = _a.pathWithNamespace, project = _a.project, workspaceLink = _a.workspaceLink, filePath = _a.filePath;
+            var projectNameSpace = encodeURIComponent(pathWithNamespace);
             var post = requestPromise({
                 uri: config.host + ("/api/v4/projects/" + projectNameSpace + "/repository/files/" + filePath + "?access_token=" + token),
                 method: 'POST',
@@ -133,7 +133,7 @@ var Services;
                 description: creation.description
             };
             if (creation.namespaceId) {
-                body['namespace_id'] = creation.namespaceId;
+                body.namespace_id = creation.namespaceId;
             }
             var post = requestPromise({
                 uri: config.host + ("/api/v4/projects?access_token=" + token),
