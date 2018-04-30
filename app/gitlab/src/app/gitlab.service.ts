@@ -1,7 +1,7 @@
 import {Injectable, Inject} from '@angular/core';
 import {Http} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/delay';
 
@@ -15,10 +15,8 @@ export class GitlabService extends BaseService {
   public recordURL: string = this.brandingAndPortalUrl + '/record/view';
   protected initSubject: any;
 
-  constructor(
-    @Inject(Http) http: Http,
-    @Inject(ConfigService) protected configService: ConfigService
-  ) {
+  constructor(@Inject(Http) http: Http,
+              @Inject(ConfigService) protected configService: ConfigService) {
     super(http, configService);
     this.initSubject = new Subject();
     this.emitInit();
@@ -43,30 +41,30 @@ export class GitlabService extends BaseService {
       wsUrl,
       {username: login.username, password: login.password}, this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    })
-    .catch((res: any) => {
-      console.log(res);
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      })
+      .catch((res: any) => {
+        console.log(res);
+        return this.extractData(res);
+      });
   }
 
-  revokeToken(){
+  revokeToken() {
     const wsUrl = this.brandingAndPortalUrl + '/ws/gitlab/revokeToken';
     return this.http.get(
       wsUrl,
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    })
-    .catch((res: any) => {
-      console.log(res);
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      })
+      .catch((res: any) => {
+        console.log(res);
+        return this.extractData(res);
+      });
   }
 
   user() {
@@ -75,14 +73,14 @@ export class GitlabService extends BaseService {
       wsUrl,
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    })
-    .catch((res: any) => {
-      console.log(res);
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      })
+      .catch((res: any) => {
+        console.log(res);
+        return this.extractData(res);
+      });
   }
 
   projects() {
@@ -91,14 +89,14 @@ export class GitlabService extends BaseService {
       wsUrl,
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res)
-    })
-    .catch((res: any) => {
-      console.log(res);
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res)
+      })
+      .catch((res: any) => {
+        console.log(res);
+        return this.extractData(res);
+      });
   }
 
   projectsRelatedRecord() {
@@ -107,31 +105,34 @@ export class GitlabService extends BaseService {
       wsUrl,
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res)
-    })
-    .catch((res: any) => {
-      console.log(res);
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res)
+      })
+      .catch((res: any) => {
+        console.log(res);
+        return this.extractData(res);
+      });
   }
 
-  link({rdmp, branch, currentWorkspace, recordMap}) {
+  link({rdmp, branch, pathWithNamespace, currentWorkspace, recordMap}) {
     const wsUrl = this.brandingAndPortalUrl + '/ws/gitlab/link';
     return this.http.post(
       wsUrl,
-      {rdmpId: rdmp, branch: branch, project: currentWorkspace, recordMap: recordMap},
+      {
+        rdmpId: rdmp, branch: branch, pathWithNamespace: pathWithNamespace,
+        project: currentWorkspace, recordMap: recordMap
+      },
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    })
-    .catch((res: any) => {
-      console.log(res);
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      })
+      .catch((res: any) => {
+        console.log(res);
+        return this.extractData(res);
+      });
   }
 
   checkLink(token: string, rdmpId: string, projectNameSpace: string) {
@@ -141,10 +142,10 @@ export class GitlabService extends BaseService {
       {token: token, rdmpId: rdmpId, projectNameSpace: projectNameSpace},
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      });
   }
 
   checkRepo(fieldToCheck: string, branch: string) {
@@ -154,10 +155,10 @@ export class GitlabService extends BaseService {
       {projectNameSpace: fieldToCheck, branch: branch},
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      });
   }
 
   compareLink(token: string, projectNameSpace: string) {
@@ -167,10 +168,10 @@ export class GitlabService extends BaseService {
       {token: token, projectNameSpace: projectNameSpace},
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      });
   }
 
   createWorkspace(creation: any) {
@@ -181,10 +182,10 @@ export class GitlabService extends BaseService {
       {creation: creation},
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      });
   }
 
   createWithTemplate(creation: any) {
@@ -195,10 +196,10 @@ export class GitlabService extends BaseService {
       {creation: creation},
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      });
   }
 
   project(pathWithNamespace: string) {
@@ -209,11 +210,11 @@ export class GitlabService extends BaseService {
       {pathWithNamespace: pathWithNamespace},
       this.options
     )
-    .delay(5000)
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    });
+      .delay(5000)
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      });
   }
 
   updateProject(creation: any) {
@@ -224,11 +225,11 @@ export class GitlabService extends BaseService {
       {creation: creation},
       this.options
     )
-    .delay(5000)
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    });
+      .delay(5000)
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      });
   }
 
   groups() {
@@ -238,10 +239,10 @@ export class GitlabService extends BaseService {
       wsUrl,
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      });
   }
 
   templates() {
@@ -251,9 +252,9 @@ export class GitlabService extends BaseService {
       wsUrl,
       this.options
     )
-    .toPromise()
-    .then((res: any) => {
-      return this.extractData(res);
-    });
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      });
   }
 }
