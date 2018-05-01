@@ -23,16 +23,16 @@ module.exports = function (sails) {
         angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/src';
         angularDest = 'angular/gitlab';
       }
-      if (fs.existsSync(angularDest)) {
-        return cb();
-      } else {
+      // if (fs.existsSync(angularDest)) {
+      //   return cb();
+      // } else {
         ncp(angularOrigin, angularDest, function (err) {
           if (err) {
             return console.error(err);
           }
           return cb();
         });
-      }
+      // }
     },
     //If each route middleware do not exist sails.lift will fail during hook.load()
     routes: {
