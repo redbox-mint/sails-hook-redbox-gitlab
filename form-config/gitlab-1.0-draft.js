@@ -5,8 +5,8 @@ module.exports = {
   name: 'gitlab-1.0-draft',
   type: 'gitlab',
   customAngularApp: {
-    'appName': 'gitlab',
-    'appSelector': 'gitlab-form'
+    appName: 'gitlab',
+    appSelector: 'gitlab-form'
   },
   skipValidationOnSave: true,
   editCssClasses: 'row col-md-12',
@@ -75,16 +75,18 @@ module.exports = {
         ],
         branch: 'master',
         createLabel: 'Create',
-        cancelLabel: 'Cancel',
+        dismissLabel: 'Ok',
         createWorkspaceLabel: 'Create Workspace',
         workspaceDetailsLabel: 'Workspace Details',
         selectSpace: 'Select Space',
         nameWorkspace: 'Name your workspace',
+        nameHasSpacesValidation: 'Name should not include spaces',
         addDescription: 'Add a description',
         selectTemplate: 'Select Template',
         nameWorkspaceValidation: 'Name of the workspace is required',
         descriptionWorkspaceValidation: 'Description of the workspace is required',
         creatingWorkspace: 'Creating Workspace',
+        linkingWorkspace: 'Linking Workspace',
         workspaceCreated: 'Workspace Created'
       }
     },
@@ -152,8 +154,9 @@ module.exports = {
       class: "AnchorOrButton",
       viewOnly: false,
       definition: {
+        name: "BackToPlan",
         label: 'Back to your Plan',
-        value: '/@branding/@portal/record/edit/@rdmp',
+        value: '/@branding/@portal/record/view/',
         cssClasses: 'btn btn-large btn-info',
         showPencil: false,
         controlType: 'anchor'

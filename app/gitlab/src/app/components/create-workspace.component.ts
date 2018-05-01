@@ -274,3 +274,4 @@ export class CreateWorkspaceComponent extends SimpleComponent {
     this.field.registerEvents();
   }
 }
+
