@@ -264,7 +264,7 @@ if(typeof aotMode == 'undefined') {
  */
 @Component({
   selector: 'ws-createworkspace',
-  templateUrl: createModalWorkspaceTemplate
+  templateUrl: './field-createworkspace.html'
 })
 export class CreateWorkspaceComponent extends SimpleComponent {
   field: CreateWorkspaceField;

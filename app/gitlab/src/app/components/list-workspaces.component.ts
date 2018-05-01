@@ -133,7 +133,7 @@ if(typeof aotMode == 'undefined') {
  */
 @Component({
   selector: 'ws-listworkspaces',
-  templateUrl: wsListWorkspaceDataTemplate
+  templateUrl: './field-listworkspaces.html'
 })
 export class ListWorkspaceDataComponent extends SimpleComponent {
   field: ListWorkspaceDataField;
