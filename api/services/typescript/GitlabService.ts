@@ -2,7 +2,7 @@ import { Observable } from 'rxjs/Rx';
 //TODO: How to import this next line CoreService?
 import services = require('../../core/typescript/services/CoreService');//'../../../../../typescript/services/CoreService.js');
 import { Sails, Model } from "sails";
-import * as requestPromise from "requestPromise-promise";
+import * as requestPromise from "request-promise";
 
 declare var RecordsService, BrandingService;
 declare var sails: Sails;

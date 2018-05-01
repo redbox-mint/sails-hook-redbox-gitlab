@@ -164,4 +164,4 @@ module.exports = {
       variableSubstitutionFields: ['value']
     }
   ]
-}
+};

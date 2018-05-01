@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Rx_1 = require("rxjs/Rx");
 var services = require("../../core/typescript/services/CoreService");
-var requestPromise = require("requestPromise-promise");
+var requestPromise = require("request-promise");
 var Services;
 (function (Services) {
     var GitlabService = (function (_super) {
