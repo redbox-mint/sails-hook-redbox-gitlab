@@ -96,7 +96,6 @@ export class CreateWorkspaceField extends FieldBase<any> {
 
   checkLogin(status: boolean) {
     this.loggedIn = this.fieldMap._rootComp.loggedIn = status;
-    this.isLoaded = true
   }
 
   createFormModel(valueElem: any = undefined): any {
