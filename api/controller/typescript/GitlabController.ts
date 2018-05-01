@@ -208,7 +208,7 @@ export module Controllers {
       if (!req.isAuthenticated()) {
         this.ajaxFail(req, res, `User not authenticated`);
       } else {
-        this.config.brandingAndPortalUrl = sails.getBaseUrl() + BrandingService.getBrandAndPortalPath(req);
+        this.config.brandingAndPortalUrl = BrandingService.getFullPath(req);
         const project = req.param('project');
         const pathWithNamespace = req.param('pathWithNamespace');
         const rdmpId = req.param('rdmpId');
@@ -299,7 +299,7 @@ export module Controllers {
       const projectNameSpace = req.param('projectNameSpace');
       const workspaceId = req.param('workspaceId');
 
-      this.config.brandingAndPortalUrl = sails.getBaseUrl() + BrandingService.getBrandAndPortalPath(req);
+      this.config.brandingAndPortalUrl = BrandingService.getFullPath(req);
 
       return WorkspaceService.provisionerUser(this.config.provisionerUser)
         .flatMap(response => {

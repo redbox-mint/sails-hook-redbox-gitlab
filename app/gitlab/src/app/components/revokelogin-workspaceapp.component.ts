@@ -78,7 +78,7 @@ export class RevokeLoginWorkspaceAppField extends FieldBase<any> {
   revoke() {
     this.gitlabService.revokeToken()
       .then(response => {
-        this.loggedIn = false;
+        this.fieldMap._rootComp.loggedIn = this.loggedIn = false;
         this.revokePermissions.emit();
         jQuery('#revokeModal').modal('hide');
       })

@@ -203,7 +203,7 @@ var Controllers;
                 this.ajaxFail(req, res, "User not authenticated");
             }
             else {
-                this.config.brandingAndPortalUrl = sails.getBaseUrl() + BrandingService.getBrandAndPortalPath(req);
+                this.config.brandingAndPortalUrl = BrandingService.getFullPath(req);
                 var project_1 = req.param('project');
                 var pathWithNamespace_1 = req.param('pathWithNamespace');
                 var rdmpId_1 = req.param('rdmpId');
@@ -293,7 +293,7 @@ var Controllers;
             var rdmpId = req.param('rdmpId');
             var projectNameSpace = req.param('projectNameSpace');
             var workspaceId = req.param('workspaceId');
-            this.config.brandingAndPortalUrl = sails.getBaseUrl() + BrandingService.getBrandAndPortalPath(req);
+            this.config.brandingAndPortalUrl = BrandingService.getFullPath(req);
             return WorkspaceService.provisionerUser(this.config.provisionerUser)
                 .flatMap(function (response) {
                 _this.config.redboxHeaders['Authorization'] = 'Bearer ' + response.token;

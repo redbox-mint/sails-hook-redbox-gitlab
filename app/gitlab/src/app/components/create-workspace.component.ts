@@ -88,10 +88,15 @@ export class CreateWorkspaceField extends FieldBase<any> {
 
   registerEvents() {
     this.fieldMap['ListWorkspaces'].field['checkLoggedIn'].subscribe(this.checkLogin.bind(this));
+    this.fieldMap['RevokeLogin'].field['revokePermissions'].subscribe(this.revoke.bind(this));
+  }
+  revoke(){
+    this.checkLogin(false);
   }
 
   checkLogin(status: boolean) {
     this.loggedIn = this.fieldMap._rootComp.loggedIn = status;
+    this.isLoaded = true
   }
 
   createFormModel(valueElem: any = undefined): any {
