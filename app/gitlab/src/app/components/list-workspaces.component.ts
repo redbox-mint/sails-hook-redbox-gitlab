@@ -55,7 +55,7 @@ export class ListWorkspaceDataField extends FieldBase<any> {
   }
 
   registerEvents() {
-//    this.fieldMap['LoginWorkspaceApp'].field['listWorkspaces'].subscribe(this.listWorkspaces.bind(this));    //TODO: this next line doesnt work because of when the form is being built
+    this.fieldMap['LoginWorkspaceApp'].field['listWorkspaces'].subscribe(this.listWorkspaces.bind(this));    //TODO: this next line doesnt work because of when the form is being built
     this.fieldMap['CreateWorkspace'].field['listWorkspaces'].subscribe(this.listWorkspaces.bind(this));
     this.fieldMap['LinkModal'].field['listWorkspaces'].subscribe(this.listWorkspaces.bind(this));
     this.fieldMap['RevokeLogin'].field['revokePermissions'].subscribe(this.revoke.bind(this));
