@@ -7,7 +7,7 @@ import * as _ from "lodash-es";
 import { GitlabService } from '../gitlab.service';
 import { Creation, CreationAlert, Template, Checks, CurrentWorkspace, Group, WorkspaceUser } from './shared';
 
-import * as jQuery from 'jquery';
+declare var jQuery: any;
 
 /**
  * Contributor Model

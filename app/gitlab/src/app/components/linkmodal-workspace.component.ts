@@ -1,4 +1,4 @@
-import { Input, Component, OnInit, Inject, Injector, EventEmitter } from '@angular/core';
+import { Output, Component, OnInit, Inject, Injector, EventEmitter } from '@angular/core';
 import { SimpleComponent } from '../../../shared/form/field-simple.component';
 import { FieldBase } from '../../../shared/form/field-base';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
