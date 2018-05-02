@@ -14,12 +14,17 @@ module.exports = function (sails) {
       let angularDest;
       let angularOrigin;
       ncp.limit = 16;
-      //To test run NODE_ENV=test mocha
-      if (sails.config.environment === 'test') { //TODO: the environment is specific to the HOOK development/test
+      //To test run with: NODE_ENV=test mocha
+      //The Hook is environment specific, that is, the environments are also available whenever the sails app is hooked
+      if (sails.config.environment === 'test') {
         angularOrigin = './app/gitlab/src';
         angularDest = 'test/angular/gitlab';
       }
-      else {
+      // if( sails.config.environment === 'production') {
+      //   angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/src';
+      //   angularDest = '.tmp/public/angular/gitlab';
+      // }
+       else {
         angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/src';
         angularDest = 'angular/gitlab';
       }
