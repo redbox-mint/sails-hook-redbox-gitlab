@@ -33,7 +33,10 @@ export class Creation {
   id: string;
   created: boolean = false;
   name: string = '';
-  namespace: string;
+  title: string = '';
+  location: string = '';
+  completeName: string = '';
+  namespace: any;
   blank: boolean = true;
   template: any;
   description: string = '';

@@ -65,13 +65,13 @@ module.exports = {
       definition: {
         name: 'CreateWorkspace',
         recordMap: [
-          {record: 'completeName', ele: 'name_with_namespace'},
+          {record: 'completeName', ele: 'completeName'},
           {record: 'id', ele: 'id'},
           {record: 'name', ele: 'name'},
-          {record: 'location', ele: 'http_url_to_repo'},
+          {record: 'location', ele: 'location'},
           {record: 'namespace', ele: 'namespace.path'},
           {record: 'description', ele: 'description'},
-          {record: 'title', ele: 'name_with_namespace'}
+          {record: 'title', ele: 'title'}
         ],
         branch: 'master',
         createLabel: 'Create',
@@ -87,6 +87,7 @@ module.exports = {
         descriptionWorkspaceValidation: 'Description of the workspace is required',
         creatingWorkspace: 'Creating Workspace',
         linkingWorkspace: 'Linking Workspace',
+        updatingWorkspace: 'Updating Workspace',
         workspaceCreated: 'Workspace Created'
       }
     },

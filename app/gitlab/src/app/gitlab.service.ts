@@ -225,7 +225,7 @@ export class GitlabService extends BaseService {
       {creation: creation},
       this.options
     )
-      .delay(5000)
+      .delay(6000)
       .toPromise()
       .then((res: any) => {
         return this.extractData(res);

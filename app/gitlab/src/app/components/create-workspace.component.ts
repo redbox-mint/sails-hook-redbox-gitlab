@@ -36,6 +36,7 @@ export class CreateWorkspaceField extends FieldBase<any> {
   workspaceCreated: string;
   linkingWorkspace: string;
   creatingWorkspace: string;
+  updatingWorkspace: string;
 
   validations: any[];
   loadingModal: boolean;
@@ -80,6 +81,7 @@ export class CreateWorkspaceField extends FieldBase<any> {
     this.workspaceCreated = options['workspaceCreated'] || '';
     this.linkingWorkspace = options['linkingWorkspace'] || '';
     this.creatingWorkspace = options['creatingWorkspace'] || '';
+    this.updatingWorkspace = options['updatingWorkspace'] || '';
   }
 
   init() {
@@ -193,10 +195,13 @@ export class CreateWorkspaceField extends FieldBase<any> {
         throw new Error(_.first(name));
       } else {
         this.creationAlert.set({message: this.linkingWorkspace, status: 'working', className: 'warning'});
-        this.creation.namespace = this.creation.group.path;
+        this.creation.namespace = response.namespace;
         this.creation.id = response.id;
+        this.creation.title = response.name_with_namespace;
+        this.creation.location = response.http_url_to_repo
+        this.creation.completeName = response.name_with_namespace;
         return this.gitlabService.link({rdmp: this.rdmp, branch: this.branch,
-          pathWithNamespace: `${this.creation.namespace}/${this.creation.name}`,
+          pathWithNamespace: `${this.creation.namespace.path}/${this.creation.name}`,
           currentWorkspace: this.creation, recordMap: this.recordMap})
           .then(response => {
             if(!response.status) {
@@ -213,8 +218,10 @@ export class CreateWorkspaceField extends FieldBase<any> {
   }
 
   createWithTemplate() {
+    this.creationAlert.set({message: this.creatingWorkspace, status: 'working', className: 'warning'});
     this.gitlabService.createWithTemplate(this.creation)
       .then(response => {
+        this.creationAlert.set({message: this.updatingWorkspace, status: 'working', className: 'warning'});
         return this.gitlabService.updateProject(this.creation);
       })
       .then(response => {
@@ -224,17 +231,21 @@ export class CreateWorkspaceField extends FieldBase<any> {
           throw new Error(_.first(name));
         } else {
           this.creationAlert.set({message: this.linkingWorkspace, status: 'working', className: 'warning'});
-          this.creation.namespace = this.creation.group.path;
+          this.creation.namespace = {path: this.creation.group.path};
+          this.creation.id = response.id;
+          this.creation.title = response.name_with_namespace;
+          this.creation.location = response.http_url_to_repo;
+          this.creation.completeName = response.name_with_namespace;
           return this.gitlabService.link({
             rdmp: this.rdmp, branch: this.branch,
-            pathWithNamespace: `${this.creation.namespace}/${this.creation.name}`,
+            pathWithNamespace: `${this.creation.namespace.path}/${this.creation.name}`,
             currentWorkspace: this.creation, recordMap: this.recordMap
           })
             .then(response => {
               if(!response.status){
                 throw new Error(response.message.description);
               } else {
-                this.creationAlert.set({message: this.workspaceCreated, status: 'done', className: 'danger'});
+                this.creationAlert.set({message: this.workspaceCreated, status: 'done', className: 'success'});
                 this.listWorkspaces.emit();
               }
             });
@@ -278,4 +289,3 @@ export class CreateWorkspaceComponent extends SimpleComponent {
     this.field.registerEvents();
   }
 }
-
