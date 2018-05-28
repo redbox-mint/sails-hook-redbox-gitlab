@@ -79,7 +79,7 @@ module.exports = {
         createWorkspaceLabel: 'Create Workspace',
         workspaceDetailsLabel: 'Workspace Details',
         selectSpace: 'Select Space',
-        nameWorkspace: 'Name your workspace',
+        nameWorkspace: 'Name your workspace (*)',
         nameHasSpacesValidation: 'Name should not include spaces',
         addDescription: 'Add a description',
         selectTemplate: 'Select Template',

@@ -171,9 +171,9 @@ export class CreateWorkspaceField extends FieldBase<any> {
     if(this.creation.nameHasSpaces()) {
       validateWorkspace.push({message: this.nameHasSpacesValidation});
     }
-    if(!this.creation.description) {
-      validateWorkspace.push({message: this.descriptionWorkspaceValidation});
-    }
+    // if(!this.creation.description) {
+    //   validateWorkspace.push({message: this.descriptionWorkspaceValidation});
+    // }
     return validateWorkspace;
   }
 
