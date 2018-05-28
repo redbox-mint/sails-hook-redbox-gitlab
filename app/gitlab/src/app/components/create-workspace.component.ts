@@ -192,7 +192,7 @@ export class CreateWorkspaceField extends FieldBase<any> {
       if(!response.status) {
         //TODO: improve this assignment in case of error.
         const name = response.message.error.error.message.name || '';
-        throw new Error(_.first(name));
+        throw new Error(name);
       } else {
         this.creationAlert.set({message: this.linkingWorkspace, status: 'working', className: 'warning'});
         this.creation.namespace = response.namespace;
@@ -228,7 +228,7 @@ export class CreateWorkspaceField extends FieldBase<any> {
         if(!response.status){
           //TODO: improve this assignment in case of error.
           const name = response.message.error.error.message.name || '';
-          throw new Error(_.first(name));
+          throw new Error(name);
         } else {
           this.creationAlert.set({message: this.linkingWorkspace, status: 'working', className: 'warning'});
           this.creation.namespace = {path: this.creation.group.path};

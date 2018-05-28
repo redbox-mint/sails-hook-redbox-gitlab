@@ -5,7 +5,6 @@ import { HttpModule } from '@angular/http';
 import { GitlabFormComponent } from './gitlab-form.component';
 import { GitlabService } from './gitlab.service';
 import { SharedModule } from '../../shared/shared.module';
-import { WorkspaceFieldComponent } from '../../shared/form/workspace-field.component';
 
 import { LoginWorkspaceAppComponent } from './components/login-workspaceapp.component';
 import { ListWorkspaceDataComponent } from './components/list-workspaces.component';
@@ -19,9 +18,9 @@ import * as jQuery from 'jquery';
   imports: [ BrowserModule, HttpModule, ReactiveFormsModule,
     SharedModule, FormsModule
   ],
-  exports: [ WorkspaceFieldComponent ],
+  exports: [  ],
   declarations: [
-    GitlabFormComponent, WorkspaceFieldComponent, ListWorkspaceDataComponent,
+    GitlabFormComponent, ListWorkspaceDataComponent,
     LoginWorkspaceAppComponent, CreateWorkspaceComponent,
     RevokeLoginWorkspaceAppComponent,
     LinkModalWorkspaceComponent,
@@ -29,7 +28,7 @@ import * as jQuery from 'jquery';
   providers: [ GitlabService ],
   bootstrap: [ GitlabFormComponent ],
   entryComponents: [
-    WorkspaceFieldComponent, ListWorkspaceDataComponent, LoginWorkspaceAppComponent,
+    ListWorkspaceDataComponent, LoginWorkspaceAppComponent,
     CreateWorkspaceComponent, RevokeLoginWorkspaceAppComponent,
     LinkModalWorkspaceComponent
   ]
