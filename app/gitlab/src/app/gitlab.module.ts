@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormsModule} from "@angular/forms";
 import { HttpModule } from '@angular/http';
 import { GitlabFormComponent } from './gitlab-form.component';
 import { GitlabService } from './gitlab.service';
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from './shared/shared.module';
 
 import { LoginWorkspaceAppComponent } from './components/login-workspaceapp.component';
 import { ListWorkspaceDataComponent } from './components/list-workspaces.component';

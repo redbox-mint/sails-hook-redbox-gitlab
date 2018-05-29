@@ -1,13 +1,13 @@
 import { Component, Inject, Input, ElementRef, Output, EventEmitter } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
-import { RecordsService } from '../../shared/form/records.service';
+import { RecordsService } from './shared/form/records.service';
 import { GitlabService } from './gitlab.service';
-import { LoadableComponent } from '../../shared/loadable.component';
-import { FieldControlService } from '../../shared/form/field-control.service';
+import { LoadableComponent } from './shared/loadable.component';
+import { FieldControlService } from './shared/form/field-control.service';
 import { Observable } from 'rxjs/Observable';
 import * as _ from "lodash-es";
-import { TranslationService } from '../../shared/translation-service';
+import { TranslationService } from './shared/translation-service';
 
 import { ListWorkspaceDataField, ListWorkspaceDataComponent } from './components/list-workspaces.component';
 import { LoginWorkspaceAppField, LoginWorkspaceAppComponent } from './components/login-workspaceapp.component';
