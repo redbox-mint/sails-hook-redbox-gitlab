@@ -11,6 +11,7 @@ const recordFormConfig = require('./form-config/gitlab-1.0-draft.js');
 module.exports = function (sails) {
   return {
     initialize: function (cb) {
+
       let angularDest;
       let angularOrigin;
       ncp.limit = 16;
@@ -25,7 +26,7 @@ module.exports = function (sails) {
       //   angularDest = '.tmp/public/angular/gitlab';
       // }
        else {
-        angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/src';
+        angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/dist';
         angularDest = 'angular/gitlab';
       }
       // if (fs.existsSync(angularDest)) {
