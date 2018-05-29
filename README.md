@@ -25,16 +25,6 @@ After bootstrap a message will appear that the hook was succesfully installed.
 
 ## TODO:
 
-### Resolve redbox dependencies
-
-A work around at the moment is to compile angular in the redbox-portal base code, until we have the necessary dependencies.
-
-- '../../../shared/form/field-simple.component'
-- '../../../shared/form/field-base'
-- '../../shared/form/records.service'
-- '../../shared/loadable.component'
-- '../../shared/translation-service'.
-
 ### Test
 
 - GitlabService
