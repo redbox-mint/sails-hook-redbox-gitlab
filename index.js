@@ -27,7 +27,7 @@ module.exports = function (sails) {
       // }
        else {
         angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/dist';
-        angularDest = '.tmp/public/angular/gitlab';
+        angularDest = '/opt/redbox-portal/.tmp/public/angular/gitlab';
       }
       // if (fs.existsSync(angularDest)) {
       //   return cb();
