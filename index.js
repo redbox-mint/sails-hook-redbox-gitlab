@@ -15,28 +15,28 @@ module.exports = function (sails) {
       let angularDest;
       let angularOrigin;
       ncp.limit = 16;
+      angularTmpDest = '/opt/redbox-portal/.tmp/public/angular/gitlab';
       //To test run with: NODE_ENV=test mocha
       //The Hook is environment specific, that is, the environments are also available whenever the sails app is hooked
       if (sails.config.environment === 'test') {
         angularOrigin = './app/gitlab/src';
         angularDest = 'test/angular/gitlab';
       }
-      // if( sails.config.environment === 'production') {
-      //   angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/src';
-      //   angularDest = '.tmp/public/angular/gitlab';
-      // }
        else {
         angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/dist';
-        angularDest = '/opt/redbox-portal/.tmp/public/angular/gitlab';
+        angularDest = '/opt/redbox-portal/assets/angular/gitlab';
       }
-      // if (fs.existsSync(angularDest)) {
-      //   return cb();
-      // } else {
+
         ncp(angularOrigin, angularDest, function (err) {
           if (err) {
             return console.error(err);
           }
-          return cb();
+          ncp(angularOrigin, angularTmpDest, function (err) {
+            if (err) {
+              return console.error(err);
+            }
+            return cb();
+          });
         });
       // }
     },
