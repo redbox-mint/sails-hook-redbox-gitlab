@@ -11,33 +11,31 @@ const recordFormConfig = require('./form-config/gitlab-1.0-draft.js');
 module.exports = function (sails) {
   return {
     initialize: function (cb) {
-
+      //To test run with: NODE_ENV=test mocha
+      //The Hook is environment specific, that is, the environments are also available whenever the sails app is hooked
       let angularDest;
       let angularOrigin;
       ncp.limit = 16;
-      angularTmpDest = '/opt/redbox-portal/.tmp/public/angular/gitlab';
-      //To test run with: NODE_ENV=test mocha
-      //The Hook is environment specific, that is, the environments are also available whenever the sails app is hooked
+      const angularTmpDest = '.tmp/public/angular/gitlab';
       if (sails.config.environment === 'test') {
         angularOrigin = './app/gitlab/src';
         angularDest = 'test/angular/gitlab';
       }
-       else {
+      else {
         angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/dist';
-        angularDest = '/opt/redbox-portal/assets/angular/gitlab';
+        angularDest = 'assets/angular/gitlab';
       }
-
-        ncp(angularOrigin, angularDest, function (err) {
+      ncp(angularOrigin, angularDest, function (err) {
+        if (err) {
+          return console.error(err);
+        }
+        ncp(angularOrigin, angularTmpDest, function (err) {
           if (err) {
             return console.error(err);
           }
-          ncp(angularOrigin, angularTmpDest, function (err) {
-            if (err) {
-              return console.error(err);
-            }
-            return cb();
-          });
+          return cb();
         });
+      });
       // }
     },
     //If each route middleware do not exist sails.lift will fail during hook.load()

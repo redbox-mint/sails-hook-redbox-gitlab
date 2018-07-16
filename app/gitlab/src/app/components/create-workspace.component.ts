@@ -255,7 +255,7 @@ export class CreateWorkspaceField extends FieldBase<any> {
         console.log(response);
       })
       .catch(error => {
-        this.creationAlert.set({message: error, status: 'done', className: 'danger'});
+        this.creationAlert.set({message: error, status: 'error', className: 'danger'});
       });
   }
 
