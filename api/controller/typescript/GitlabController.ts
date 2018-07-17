@@ -204,7 +204,7 @@ export module Controllers {
 
     public link(req, res) {
       sails.log.debug('get link');
-      sails.log.debug('createWorkspaceRecord')
+      sails.log.debug('createWorkspaceRecord');
       if (!req.isAuthenticated()) {
         this.ajaxFail(req, res, `User not authenticated`);
       } else {
@@ -216,6 +216,7 @@ export module Controllers {
         const branch = req.param('branch') || 'master';
         let workspaceId = null;
         let gitlab = {};
+        let recordMetadata = null;
 
         return WorkspaceService.provisionerUser(this.config.provisionerUser)
           .flatMap(response => {
@@ -224,9 +225,15 @@ export module Controllers {
             return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName);
           }).flatMap(response => {
             gitlab = response.info;
-            const username = req.user.username;
+            return WorkspaceService.getRecordMeta(this.config, rdmpId);
+          }).flatMap(response => {
+            sails.log.debug('recordMetadata');
+            recordMetadata = response;
             let record = WorkspaceService.mapToRecord(project, recordMap);
             record = _.merge(record, {type: this.config.recordType});
+            record.rdmpOid = rdmpId;
+            record.rdmpTitle = recordMetadata.title;
+            const username = req.user.username;
             return WorkspaceService.createWorkspaceRecord(this.config, username, record, this.config.recordType, this.config.workflowStage);
           }).flatMap(response => {
             workspaceId = response.oid;
@@ -237,14 +244,9 @@ export module Controllers {
               project: project, workspaceLink:rdmpId + '.' + workspaceId,
               filePath:'stash.workspace'
             });
-          })
-          .flatMap(response => {
+          }).flatMap(() => {
             sails.log.debug('addParentRecordLink');
-            return WorkspaceService.getRecordMeta(this.config, rdmpId);
-          })
-          .flatMap(recordMetadata => {
-            sails.log.debug('recordMetadata');
-            if(recordMetadata && recordMetadata.workspaces) {
+            if(recordMetadata.workspaces) {
               const wss = recordMetadata.workspaces.find(id => workspaceId === id);
               if(!wss) {
                 recordMetadata.workspaces.push({id: workspaceId});

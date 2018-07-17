@@ -211,6 +211,7 @@ var Controllers;
                 var branch_2 = req.param('branch') || 'master';
                 var workspaceId_1 = null;
                 var gitlab_1 = {};
+                var recordMetadata_1 = null;
                 return WorkspaceService.provisionerUser(this.config.provisionerUser)
                     .flatMap(function (response) {
                     _this.config.redboxHeaders['Authorization'] = 'Bearer ' + response.token;
@@ -218,9 +219,15 @@ var Controllers;
                     return WorkspaceService.workspaceAppFromUserId(userId, _this.config.appName);
                 }).flatMap(function (response) {
                     gitlab_1 = response.info;
-                    var username = req.user.username;
+                    return WorkspaceService.getRecordMeta(_this.config, rdmpId_1);
+                }).flatMap(function (response) {
+                    sails.log.debug('recordMetadata');
+                    recordMetadata_1 = response;
                     var record = WorkspaceService.mapToRecord(project_1, recordMap_1);
                     record = _.merge(record, { type: _this.config.recordType });
+                    record.rdmpOid = rdmpId_1;
+                    record.rdmpTitle = recordMetadata_1.title;
+                    var username = req.user.username;
                     return WorkspaceService.createWorkspaceRecord(_this.config, username, record, _this.config.recordType, _this.config.workflowStage);
                 }).flatMap(function (response) {
                     workspaceId_1 = response.oid;
@@ -231,20 +238,15 @@ var Controllers;
                         project: project_1, workspaceLink: rdmpId_1 + '.' + workspaceId_1,
                         filePath: 'stash.workspace'
                     });
-                })
-                    .flatMap(function (response) {
+                }).flatMap(function () {
                     sails.log.debug('addParentRecordLink');
-                    return WorkspaceService.getRecordMeta(_this.config, rdmpId_1);
-                })
-                    .flatMap(function (recordMetadata) {
-                    sails.log.debug('recordMetadata');
-                    if (recordMetadata && recordMetadata.workspaces) {
-                        var wss = recordMetadata.workspaces.find(function (id) { return workspaceId_1 === id; });
+                    if (recordMetadata_1.workspaces) {
+                        var wss = recordMetadata_1.workspaces.find(function (id) { return workspaceId_1 === id; });
                         if (!wss) {
-                            recordMetadata.workspaces.push({ id: workspaceId_1 });
+                            recordMetadata_1.workspaces.push({ id: workspaceId_1 });
                         }
                     }
-                    return WorkspaceService.updateRecordMeta(_this.config, recordMetadata, rdmpId_1);
+                    return WorkspaceService.updateRecordMeta(_this.config, recordMetadata_1, rdmpId_1);
                 })
                     .subscribe(function (response) {
                     sails.log.debug('updateRecordMeta');
