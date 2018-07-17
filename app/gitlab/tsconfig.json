@@ -15,5 +15,17 @@
       "es2017",
       "dom"
     ]
-  }
+  },
+  "types": [
+    "jquery"
+  ],
+  "include": [
+    "src/**/*",
+    "redbox-portal/angular/shared/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
+  "allowSyntheticDefaultImports": true
 }
