@@ -21,7 +21,8 @@
   ],
   "include": [
     "src/**/*",
-    "redbox-portal/angular/shared/**/*.ts"
+    "redbox-portal/angular/shared/**/*.ts",
+    "node_modules/ng2-datetime/**/*.ts"
   ],
   "exclude": [
     "node_modules",
