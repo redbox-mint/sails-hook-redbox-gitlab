@@ -63,7 +63,7 @@
       <div class="modal-footer">
         <span *ngIf="field.creationAlert.status !== ('working' || 'done'); then buttonsCreate else buttonsBlocked;"></span>
         <ng-template #buttonsCreate>
-          <button ngIf="field.creationAlert.status !== 'done'" class="btn btn-primary" (click)="field.create()" type="submit">{{ field.createLabel }}</button>
+          <button *ngIf="field.creationAlert.status !== 'done'" class="btn btn-primary" (click)="field.create()" type="submit">{{ field.createLabel }}</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ field.dismissLabel }}</button>
         </ng-template>
         <ng-template #buttonsBlocked>
