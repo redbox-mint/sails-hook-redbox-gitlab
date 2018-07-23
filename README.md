@@ -35,6 +35,12 @@ After bootstrap a message will appear that the hook was succesfully installed.
 
 ### Angular
 
+Install Angular 1.7.4
+
+```bash
+npm install -g "@angular/cli@1.7.4"
+```
+
 To build your angular app:
 
 In redbox-portal/angular
@@ -104,4 +110,34 @@ Form Loaded
 
 ```
 sails.config['form']['forms']['gitlab-1.0-draft']
+```
+
+## Development in redbox-portal
+
+There are several ways to code against the redbox-portal. One of it is to link the code via `npm link`
+
+*npm link this hook*
+
+```bash
+cd /into/where/hook/is/
+npm link
+```
+
+npm link into redbox-portal
+
+```bash
+cd /into/redbox-portal/
+npm link sails-hook-redbox-gitlab
+```
+
+If you are using vagrant, place the code inside of the same machine/docker. You can share it via the VagrantFile using sync_folder
+
+```yml
+  config.vm.synced_folder "/Users/moises/source/qcif/sails-hook-redbox-gitlab", "/opt/hooks/sails-hook-redbox-gitlab", id: "gitlab"
+```
+
+Copy changes from hook to portal
+
+```bash
+cp -r /opt/hooks/sails-hook-redbox-gitlab/app/gitlab/dist/* ./.tmp/public/angular/gitlab
 ```

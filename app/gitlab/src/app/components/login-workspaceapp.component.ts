@@ -33,6 +33,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
   permissionList: object[];
   allowLabel: string;
   closeLabel: string;
+  loading: boolean;
 
   gitlabService: GitlabService;
   @Output() listWorkspaces: EventEmitter<any> = new EventEmitter<any>();
@@ -50,6 +51,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
     this.permissionLabel = options['permissionLabel'] || '';
     this.allowLabel = options['allowLabel'] || 'Allow';
     this.closeLabel = options['closeLabel'] || 'Close';
+    this.loading = true;
   }
 
   registerEvents() {
@@ -65,7 +67,8 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
 
   checkLogin(status: boolean) {
     this.loggedIn = this.fieldMap._rootComp.loggedIn = status;
-    this.isLoaded = true
+    this.isLoaded = true;
+    this.loading = false;
   }
 
   createFormModel(valueElem: any = undefined): any {
@@ -102,6 +105,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
 
   allow(value: any) {
     //this.loginSubmitted.emit(value);
+    this.loading = true;
     jQuery('#loginPermissionModal').modal('hide');
     this.gitlabService.token(value).then((response: any) => {
       if(!response.status){
@@ -125,6 +129,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
           this.listWorkspaces.emit(response.user);
         } else {
           // show login page because it cannot login via workspace apps
+          this.loading = false;
           this.displayLoginMessage({error: true, value: response.error.error_description});
           this.loggedIn = false;
           // this.setLoading(false);
@@ -142,7 +147,10 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
 @Component({
   selector: 'ws-login',
   template: `
-    <div *ngIf="!field.loggedIn && field.isLoaded" class="padding-bottom-10">
+    <div *ngIf="field.loading" class="">
+      <img class="center-block" src="/images/loading.svg">
+    </div>
+    <div *ngIf="!field.loggedIn && field.isLoaded && !field.loading" class="padding-bottom-10">
       <div class="">
         <h4>{{ field.permissionStep }}</h4>
         <form #form="ngForm"  novalidate autocomplete="off">
