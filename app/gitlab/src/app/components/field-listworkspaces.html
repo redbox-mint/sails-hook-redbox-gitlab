@@ -28,6 +28,8 @@
       </tr>
       </tbody>
     </table>
+    <pagination [directionLinks]="false" [boundaryLinks]="true" [totalItems]="field.workspacesMeta.totalCount"
+                [(ngModel)]="field.currentPage" (pageChanged)="field.pageChanged($event)" class="pagination-sm"></pagination>
     <div *ngIf="field.loading" class="">
       <img class="center-block" src="/images/loading.svg">
     </div>

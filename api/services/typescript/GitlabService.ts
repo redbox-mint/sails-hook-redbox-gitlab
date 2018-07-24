@@ -66,10 +66,12 @@ export module Services {
       return Observable.fromPromise(get);
     }
 
-    projects({config, token}) {
+    projects({config, token, page, perPage}) {
+      const url = `/api/v4/projects?membership=true&access_token=${token}&order_by=created_at&page=${page}&per_page=${perPage}&simple=false&sort=desc`;
       const get = requestPromise({
-        uri: config.host + `/api/v4/projects?membership=true&access_token=${token}`,
-        json: true
+        uri: config.host + url,
+        json: true,
+        resolveWithFullResponse: true
       });
       return Observable.fromPromise(get);
     }

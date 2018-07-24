@@ -164,6 +164,9 @@ export module Controllers {
       let currentProjects = [];
       let projectsWithInfo = [];
       let gitlab = {};
+      const page = req.query['page'] || 1;
+      const perPage = req.query['perPage'] || 10;
+      let projectHeaders = {};
       if (!req.isAuthenticated()) {
         this.ajaxFail(req, res, `User not authenticated`);
       } else {
@@ -172,11 +175,13 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             gitlab = response.info;
-            return GitlabService.projects({config: this.config, token: gitlab['accessToken'].access_token})
+            return GitlabService.projects({config: this.config, token: gitlab['accessToken'].access_token, page: page, perPage: perPage})
           })
           .flatMap(response => {
+            projectHeaders = response.headers;
+            const data = response.body;
             let obs = [];
-            currentProjects = response.slice(0);
+            currentProjects = data.slice(0);
             for (let r of currentProjects) {
               obs.push(GitlabService.readFileFromRepo(this.config, gitlab['accessToken'].access_token, branch, r.path_with_namespace, 'stash.workspace'));
             }
@@ -193,11 +198,17 @@ export module Controllers {
             sails.log.debug(errorMessage);
             this.ajaxFail(req, res, errorMessage, error);
           }, () => {
-            sails.log.debug('complete');
             currentProjects.map(p => {
               p.rdmp = projectsWithInfo.find(pwi => pwi.path === p.path_with_namespace);
             });
-            this.ajaxOk(req, res, null, currentProjects);
+            this.ajaxOk(req, res, null, {
+              projects: currentProjects,
+              meta: {
+                previousPage: projectHeaders['x-prev-page'], totalPages: projectHeaders['x-total-pages'],
+                total: projectHeaders['x-total'], nextPage: projectHeaders['x-next-page'], page: projectHeaders['x-page'],
+                perPage: projectHeaders['x-per-page']
+              }
+            });
           });
       }
     }

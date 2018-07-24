@@ -129,6 +129,7 @@ export class CreateWorkspaceField extends FieldBase<any> {
     this.workspaceUser = this.fieldMap._rootComp.workspaceUser;
     this.loadingModal = true;
     this.creation.clear();
+    this.creationAlert.clear();
     let group = new Group();
     group.id = this.workspaceUser.id; group.path = this.workspaceUser.username; group.isUser = true;
     this.groups = [group];
@@ -141,7 +142,6 @@ export class CreateWorkspaceField extends FieldBase<any> {
         this.groups = this.groups.concat(response);
         return this.gitlabService.templates();
       }).then(response => {
-      console.log(response);
       this.templates = this.templates.concat(response);
       this.loadingModal = false;
     })

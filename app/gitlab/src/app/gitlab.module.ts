@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { GitlabFormComponent } from './gitlab-form.component';
 import { GitlabService } from './gitlab.service';
 import { SharedModule } from './shared/shared.module';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 import { LoginWorkspaceAppComponent } from './components/login-workspaceapp.component';
 import { ListWorkspaceDataComponent } from './components/list-workspaces.component';
@@ -16,7 +17,7 @@ import * as jQuery from 'jquery';
 
 @NgModule({
   imports: [ BrowserModule, HttpModule, ReactiveFormsModule,
-    SharedModule, FormsModule
+    SharedModule, FormsModule, PaginationModule.forRoot()
   ],
   exports: [  ],
   declarations: [

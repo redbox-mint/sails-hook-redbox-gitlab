@@ -64,10 +64,12 @@ var Services;
             return Rx_1.Observable.fromPromise(get);
         };
         GitlabService.prototype.projects = function (_a) {
-            var config = _a.config, token = _a.token;
+            var config = _a.config, token = _a.token, page = _a.page, perPage = _a.perPage;
+            var url = "/api/v4/projects?membership=true&access_token=" + token + "&order_by=created_at&page=" + page + "&per_page=" + perPage + "&simple=false&sort=desc";
             var get = requestPromise({
-                uri: config.host + ("/api/v4/projects?membership=true&access_token=" + token),
-                json: true
+                uri: config.host + url,
+                json: true,
+                resolveWithFullResponse: true
             });
             return Rx_1.Observable.fromPromise(get);
         };

@@ -156,6 +156,9 @@ var Controllers;
             var currentProjects = [];
             var projectsWithInfo = [];
             var gitlab = {};
+            var page = req.query['page'] || 1;
+            var perPage = req.query['perPage'] || 10;
+            var projectHeaders = {};
             if (!req.isAuthenticated()) {
                 this.ajaxFail(req, res, "User not authenticated");
             }
@@ -165,11 +168,13 @@ var Controllers;
                 return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
                     .flatMap(function (response) {
                     gitlab = response.info;
-                    return GitlabService.projects({ config: _this.config, token: gitlab['accessToken'].access_token });
+                    return GitlabService.projects({ config: _this.config, token: gitlab['accessToken'].access_token, page: page, perPage: perPage });
                 })
                     .flatMap(function (response) {
+                    projectHeaders = response.headers;
+                    var data = response.body;
                     var obs = [];
-                    currentProjects = response.slice(0);
+                    currentProjects = data.slice(0);
                     for (var _i = 0, currentProjects_1 = currentProjects; _i < currentProjects_1.length; _i++) {
                         var r = currentProjects_1[_i];
                         obs.push(GitlabService.readFileFromRepo(_this.config, gitlab['accessToken'].access_token, branch_1, r.path_with_namespace, 'stash.workspace'));
@@ -187,11 +192,17 @@ var Controllers;
                     sails.log.debug(errorMessage);
                     _this.ajaxFail(req, res, errorMessage, error);
                 }, function () {
-                    sails.log.debug('complete');
                     currentProjects.map(function (p) {
                         p.rdmp = projectsWithInfo.find(function (pwi) { return pwi.path === p.path_with_namespace; });
                     });
-                    _this.ajaxOk(req, res, null, currentProjects);
+                    _this.ajaxOk(req, res, null, {
+                        projects: currentProjects,
+                        meta: {
+                            previousPage: projectHeaders['x-prev-page'], totalPages: projectHeaders['x-total-pages'],
+                            total: projectHeaders['x-total'], nextPage: projectHeaders['x-next-page'], page: projectHeaders['x-page'],
+                            perPage: projectHeaders['x-per-page']
+                        }
+                    });
                 });
             }
         };

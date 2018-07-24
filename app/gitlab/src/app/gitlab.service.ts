@@ -99,8 +99,8 @@ export class GitlabService extends BaseService {
       });
   }
 
-  projectsRelatedRecord() {
-    const wsUrl = this.brandingAndPortalUrl + '/ws/gitlab/projectsRelatedRecord';
+  projectsRelatedRecord({page, perPage}) {
+    const wsUrl = this.brandingAndPortalUrl + `/ws/gitlab/projectsRelatedRecord?page=${page}&perPage=${perPage}`;
     return this.http.get(
       wsUrl,
       this.options

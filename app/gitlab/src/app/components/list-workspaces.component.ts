@@ -1,9 +1,10 @@
-import { Input, Output, Component, OnInit, Inject, Injector, EventEmitter} from '@angular/core';
-import { SimpleComponent } from '../shared/form/field-simple.component';
-import { FieldBase } from '../shared/form/field-base';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Input, Output, Component, OnInit, Inject, Injector, EventEmitter} from '@angular/core';
+import {SimpleComponent} from '../shared/form/field-simple.component';
+import {FieldBase} from '../shared/form/field-base';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {PaginationModule} from 'ngx-bootstrap';
 
-import { GitlabService } from '../gitlab.service';
+import {GitlabService} from '../gitlab.service';
 
 declare var jQuery: any;
 
@@ -32,6 +33,9 @@ export class ListWorkspaceDataField extends FieldBase<any> {
   user: any;
   gitlabService: GitlabService;
   rdmp: string;
+  currentPage: number = 1;
+  totalItems: number;
+  workspacesMeta: WorkspacesMeta;
 
   @Output() checkLoggedIn: EventEmitter<any> = new EventEmitter<any>();
   @Output() linkModal: EventEmitter<any> = new EventEmitter<any>();
@@ -52,6 +56,7 @@ export class ListWorkspaceDataField extends FieldBase<any> {
     this.failedObjects = [];
     this.accessDeniedObjects = [];
     this.loading = true;
+    this.workspacesMeta = new WorkspacesMeta();
   }
 
   registerEvents() {
@@ -61,7 +66,7 @@ export class ListWorkspaceDataField extends FieldBase<any> {
     this.fieldMap['RevokeLogin'].field['revokePermissions'].subscribe(this.revoke.bind(this));
   }
 
-  init(){
+  init() {
     this.rdmp = this.fieldMap._rootComp.rdmp;
   }
 
@@ -83,8 +88,8 @@ export class ListWorkspaceDataField extends FieldBase<any> {
     return this.formModel;
   }
 
-  setValue(value:any) {
-    this.formModel.patchValue(value, {emitEvent: false });
+  setValue(value: any) {
+    this.formModel.patchValue(value, {emitEvent: false});
     this.formModel.markAsTouched();
   }
 
@@ -100,11 +105,16 @@ export class ListWorkspaceDataField extends FieldBase<any> {
         this.user = response.user;
         this.setWorkspaceUser.emit(this.user);
         this.workspaces = [];
-        return this.gitlabService.projectsRelatedRecord()
+        return this.gitlabService.projectsRelatedRecord({page: this.workspacesMeta.page, perPage: this.workspacesMeta.perPage})
           .then(response => {
             this.loading = false;
             this.loggedIn = this.fieldMap._rootComp.loggedIn = true;
-            this.workspaces = response;
+            this.workspaces = response.projects;
+            const workspacesMeta = response.meta;
+            this.workspacesMeta.totalCount = workspacesMeta.total;
+            this.workspacesMeta.nextPage = workspacesMeta.nextPage;
+            this.workspacesMeta.perPage = workspacesMeta.perPage;
+            this.workspacesMeta.page = workspacesMeta.page;
             this.checkLoggedIn.emit(true);
           });
       } else {
@@ -119,12 +129,21 @@ export class ListWorkspaceDataField extends FieldBase<any> {
     this.linkModal.emit({rdmp: this.fieldMap._rootComp.rdmp, workspace: item});
   }
 
+  pageChanged(event: any) {
+    this.workspacesMeta.page = event.page;
+    this.listWorkspaces();
+  }
+
+  setPage(pageNo: number): void {
+    this.currentPage = pageNo;
+  }
+
 }
 
 declare var aotMode
 // Setting the template url to a constant rather than directly in the component as the latter breaks document generation
 let wsListWorkspaceDataTemplate = './field-listworkspaces.html';
-if(typeof aotMode == 'undefined') {
+if (typeof aotMode == 'undefined') {
   wsListWorkspaceDataTemplate = '../angular/gitlab/components/field-listworkspaces.html';
 }
 
@@ -147,4 +166,11 @@ export class ListWorkspaceDataComponent extends SimpleComponent {
     this.field.listWorkspaces();
   }
 
+}
+
+class WorkspacesMeta {
+  totalCount: number;
+  page: number = 1;
+  nextPage: number;
+  perPage: number = 10;
 }
