@@ -36,28 +36,12 @@ var Controllers;
                 'updateProject'
             ];
             _this.config = new Config();
-            var gitlabConfig = local.workspaces.gitlab;
-            var workspaceConfig = local.workspaces;
-            _this.config = {
-                host: gitlabConfig.host,
-                recordType: gitlabConfig.recordType,
-                workflowStage: gitlabConfig.workflowStage,
-                formName: gitlabConfig.formName,
-                appName: gitlabConfig.appName,
-                parentRecord: workspaceConfig.parentRecord,
-                provisionerUser: workspaceConfig.provisionerUser,
-                brandingAndPortalUrl: '',
-                redboxHeaders: {
-                    'Cache-Control': 'no-cache',
-                    'Content-Type': 'application/json',
-                    'Authorization': '',
-                }
-            };
             return _this;
         }
         GitlabController.prototype.token = function (req, res) {
             var _this = this;
             sails.log.debug('get token:');
+            this.config.set();
             var username = req.param('username');
             var password = req.param('password');
             var accessToken = {};
@@ -102,6 +86,7 @@ var Controllers;
         };
         GitlabController.prototype.revokeToken = function (req, res) {
             var _this = this;
+            this.config.set();
             var userId = req.user.id;
             WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
                 .flatMap(function (response) {
@@ -126,6 +111,7 @@ var Controllers;
         GitlabController.prototype.user = function (req, res) {
             var _this = this;
             sails.log.debug('get user:');
+            this.config.set();
             var gitlab = {};
             if (!req.isAuthenticated()) {
                 this.ajaxFail(req, res, "User not authenticated");
@@ -153,6 +139,7 @@ var Controllers;
         GitlabController.prototype.projectsRelatedRecord = function (req, res) {
             var _this = this;
             sails.log.debug('get related projects');
+            this.config.set();
             var currentProjects = [];
             var projectsWithInfo = [];
             var gitlab = {};
@@ -210,6 +197,7 @@ var Controllers;
             var _this = this;
             sails.log.debug('get link');
             sails.log.debug('createWorkspaceRecord');
+            this.config.set();
             if (!req.isAuthenticated()) {
                 this.ajaxFail(req, res, "User not authenticated");
             }
@@ -275,6 +263,7 @@ var Controllers;
         GitlabController.prototype.checkRepo = function (req, res) {
             var _this = this;
             sails.log.debug('check link');
+            this.config.set();
             if (!req.isAuthenticated()) {
                 this.ajaxFail(req, res, "User not authenticated");
             }
@@ -303,6 +292,7 @@ var Controllers;
         };
         GitlabController.prototype.compareLink = function (req, res) {
             var _this = this;
+            this.config.set();
             var rdmpId = req.param('rdmpId');
             var projectNameSpace = req.param('projectNameSpace');
             var workspaceId = req.param('workspaceId');
@@ -334,6 +324,7 @@ var Controllers;
         };
         GitlabController.prototype.create = function (req, res) {
             var _this = this;
+            this.config.set();
             var creation = req.param('creation');
             var workspaceId = '';
             var group = creation.group;
@@ -362,6 +353,7 @@ var Controllers;
         };
         GitlabController.prototype.createWithTemplate = function (req, res) {
             var _this = this;
+            this.config.set();
             if (!req.isAuthenticated()) {
                 this.ajaxFail(req, res, "User not authenticated");
             }
@@ -387,6 +379,7 @@ var Controllers;
         };
         GitlabController.prototype.updateProject = function (req, res) {
             var _this = this;
+            this.config.set();
             if (!req.isAuthenticated()) {
                 this.ajaxFail(req, res, "User not authenticated");
             }
@@ -417,6 +410,7 @@ var Controllers;
         };
         GitlabController.prototype.project = function (req, res) {
             var _this = this;
+            this.config.set();
             var pathWithNamespace = req.param('pathWithNamespace');
             if (!req.isAuthenticated()) {
                 this.ajaxFail(req, res, "User not authenticated");
@@ -442,6 +436,7 @@ var Controllers;
         };
         GitlabController.prototype.templates = function (req, res) {
             var _this = this;
+            this.config.set();
             if (!req.isAuthenticated()) {
                 this.ajaxFail(req, res, "User not authenticated");
             }
@@ -467,6 +462,7 @@ var Controllers;
         };
         GitlabController.prototype.groups = function (req, res) {
             var _this = this;
+            this.config.set();
             if (!req.isAuthenticated()) {
                 this.ajaxFail(req, res, "User not authenticated");
             }
@@ -517,6 +513,23 @@ var Controllers;
     var Config = (function () {
         function Config() {
         }
+        Config.prototype.set = function () {
+            var workspaceConfig = sails.config.workspaces;
+            var gitlabConfig = workspaceConfig.gitlab;
+            this.host = gitlabConfig.host;
+            this.recordType = gitlabConfig.recordType;
+            this.workflowStage = gitlabConfig.workflowStage;
+            this.formName = gitlabConfig.formName;
+            this.appName = gitlabConfig.appName;
+            this.parentRecord = workspaceConfig.parentRecord;
+            this.provisionerUser = workspaceConfig.provisionerUser;
+            this.brandingAndPortalUrl = '';
+            this.redboxHeaders = {
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'application/json',
+                'Authorization': workspaceConfig.portal.authorization,
+            };
+        };
         return Config;
     }());
 })(Controllers = exports.Controllers || (exports.Controllers = {}));

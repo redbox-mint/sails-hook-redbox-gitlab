@@ -37,34 +37,16 @@ export module Controllers {
       'project',
       'updateProject'
     ]
-    protected config: Config;
+    protected config: any;
 
-    constructor(){
+    constructor() {
       super();
       this.config = new Config();
-      const gitlabConfig = local.workspaces.gitlab;
-      const workspaceConfig = local.workspaces;
-      this.config = {
-        host: gitlabConfig.host,
-        recordType: gitlabConfig.recordType,
-        workflowStage: gitlabConfig.workflowStage,
-        formName: gitlabConfig.formName,
-        appName: gitlabConfig.appName,
-        parentRecord: workspaceConfig.parentRecord,
-        provisionerUser: workspaceConfig.provisionerUser,
-        //TODO: get the brand url with config service
-        brandingAndPortalUrl: '',
-        redboxHeaders:  {
-          'Cache-Control': 'no-cache',
-          'Content-Type': 'application/json',
-          'Authorization': '',
-        }
-      }
     }
 
     public token(req, res) {
       sails.log.debug('get token:');
-
+      this.config.set();
       //TODO: do we need another form of security?
       const username = req.param('username');
       const password = req.param('password');
@@ -110,6 +92,7 @@ export module Controllers {
     }
 
     public revokeToken(req, res) {
+      this.config.set();
       const userId = req.user.id;
       WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
         .flatMap(response => {
@@ -134,6 +117,7 @@ export module Controllers {
 
     public user(req, res) {
       sails.log.debug('get user:');
+      this.config.set();
       let gitlab = {};
       if (!req.isAuthenticated()) {
         this.ajaxFail(req, res, `User not authenticated`);
@@ -160,7 +144,7 @@ export module Controllers {
 
     public projectsRelatedRecord(req, res) {
       sails.log.debug('get related projects');
-
+      this.config.set();
       let currentProjects = [];
       let projectsWithInfo = [];
       let gitlab = {};
@@ -216,6 +200,7 @@ export module Controllers {
     public link(req, res) {
       sails.log.debug('get link');
       sails.log.debug('createWorkspaceRecord');
+      this.config.set();
       if (!req.isAuthenticated()) {
         this.ajaxFail(req, res, `User not authenticated`);
       } else {
@@ -281,6 +266,7 @@ export module Controllers {
 
     public checkRepo(req, res) {
       sails.log.debug('check link');
+      this.config.set();
       if (!req.isAuthenticated()) {
         this.ajaxFail(req, res, `User not authenticated`);
       } else {
@@ -308,6 +294,7 @@ export module Controllers {
     }
 
     public compareLink(req, res) {
+      this.config.set();
       const rdmpId = req.param('rdmpId');
       const projectNameSpace = req.param('projectNameSpace');
       const workspaceId = req.param('workspaceId');
@@ -340,6 +327,7 @@ export module Controllers {
     }
 
     public create(req, res) {
+      this.config.set();
       const creation = req.param('creation');
 
       let workspaceId = '';
@@ -369,6 +357,7 @@ export module Controllers {
 
     public createWithTemplate(req, res) {
       //Needs to fork project
+      this.config.set();
       if (!req.isAuthenticated()) {
         this.ajaxFail(req, res, `User not authenticated`);
       } else {
@@ -396,6 +385,7 @@ export module Controllers {
       //TODO: In this case only name can be updated for FORK, should it have more?
       //Remove fork relationship?
       //change name
+      this.config.set();
       if (!req.isAuthenticated()) {
         this.ajaxFail(req, res, `User not authenticated`);
       } else {
@@ -426,6 +416,7 @@ export module Controllers {
     }
 
     public project(req, res) {
+      this.config.set();
       const pathWithNamespace = req.param('pathWithNamespace');
 
       if (!req.isAuthenticated()) {
@@ -451,6 +442,7 @@ export module Controllers {
     }
 
     public templates(req, res) {
+      this.config.set();
       if (!req.isAuthenticated()) {
         this.ajaxFail(req, res, `User not authenticated`);
       } else {
@@ -475,6 +467,7 @@ export module Controllers {
     }
 
     public groups(req, res) {
+      this.config.set();
       if (!req.isAuthenticated()) {
         this.ajaxFail(req, res, `User not authenticated`);
       } else {
@@ -532,8 +525,27 @@ export module Controllers {
     provisionerUser: string;
     brandingAndPortalUrl: string;
     redboxHeaders: any;
-  }
 
+    set() {
+      const workspaceConfig = sails.config.workspaces;
+      const gitlabConfig = workspaceConfig.gitlab;
+
+      this.host = gitlabConfig.host;
+      this.recordType = gitlabConfig.recordType;
+      this.workflowStage = gitlabConfig.workflowStage;
+      this.formName = gitlabConfig.formName;
+      this.appName = gitlabConfig.appName;
+      this.parentRecord = workspaceConfig.parentRecord;
+      this.provisionerUser = workspaceConfig.provisionerUser;
+      this.brandingAndPortalUrl = '';
+      this.redboxHeaders = {
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'application/json',
+        'Authorization': workspaceConfig.portal.authorization,
+      };
+
+    }
+  }
 }
 
 module.exports = new Controllers.GitlabController().exports();
