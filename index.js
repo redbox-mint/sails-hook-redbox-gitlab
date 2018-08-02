@@ -1,5 +1,5 @@
 const ncp = require('ncp').ncp;
-const fs = require('fs');
+const fs = require('fs-extra');
 const _ = require('lodash');
 
 const GitlabController = require('./api/controller/typescript/GitlabController');
@@ -23,8 +23,15 @@ module.exports = function (sails) {
       }
       else {
         angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/dist';
-        angularDest = 'assets/angular/gitlab';
+        angularDest = './assets/angular/gitlab';
       }
+      if (fs.existsSync(angularDest)) {
+        fs.removeSync(angularDest)
+      }
+      if (fs.existsSync(angularTmpDest)) {
+        fs.removeSync(angularTmpDest)
+      }
+      console.log('GitLab: Copying angular files');
       ncp(angularOrigin, angularDest, function (err) {
         if (err) {
           return console.error(err);
@@ -36,7 +43,6 @@ module.exports = function (sails) {
           return cb();
         });
       });
-      // }
     },
     //If each route middleware do not exist sails.lift will fail during hook.load()
     routes: {
