@@ -69,7 +69,7 @@ module.exports = function (sails) {
       sails.config = _.merge(sails.config, recordTypeConfig);
       sails.config = _.merge(sails.config, workflowConfig);
       sails.config = _.merge(sails.config, workspaceTypeConfig);
-      sails.config = _.merge(sails.config, authConfig);
+      //sails.config['auth']['rules'] = _.merge(sails.config['auth']['rules'], authConfig);
       sails.config['form']['forms'] = _.merge(sails.config['form']['forms'], {'gitlab-1.0-draft': recordFormConfig});
     }
   }

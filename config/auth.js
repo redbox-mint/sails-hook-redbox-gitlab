@@ -4,13 +4,13 @@
 
  */
 module.exports.auth = {
-  rules: [
-    {
-      path: '/:branding/:portal/ws/gitlab(/*)',
-      role: 'Researcher',
-      can_update: true
-    }
-  ]
+  // rules: [
+  //   {
+  //     path: '/:branding/:portal/ws/gitlab(/*)',
+  //     role: 'Researcher',
+  //     can_update: true
+  //   }
+  // ]
 };
 
 /*
