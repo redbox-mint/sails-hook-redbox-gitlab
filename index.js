@@ -6,6 +6,8 @@ const GitlabController = require('./api/controller/typescript/GitlabController')
 const GitlabService = require('./api/services/typescript/GitlabService');
 const recordTypeConfig = require('./config/recordtype.js');
 const workflowConfig = require('./config/workflow.js');
+const workspaceTypeConfig = require('./config/workspacetype.js');
+const authConfig = require('./config/auth.js');
 const recordFormConfig = require('./form-config/gitlab-1.0-draft.js');
 
 module.exports = function (sails) {
@@ -66,6 +68,8 @@ module.exports = function (sails) {
       sails.services['GitlabService'] = GitlabService;
       sails.config = _.merge(sails.config, recordTypeConfig);
       sails.config = _.merge(sails.config, workflowConfig);
+      sails.config = _.merge(sails.config, workspaceTypeConfig);
+      sails.config = _.merge(sails.config, authConfig);
       sails.config['form']['forms'] = _.merge(sails.config['form']['forms'], {'gitlab-1.0-draft': recordFormConfig});
     }
   }
