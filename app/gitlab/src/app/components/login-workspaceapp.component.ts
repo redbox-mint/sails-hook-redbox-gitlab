@@ -31,6 +31,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
   permissionStep: string;
   permissionLabel: string;
   permissionList: object[];
+  appServer: string;
   allowLabel: string;
   closeLabel: string;
   loading: boolean;
@@ -47,6 +48,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
     this.loginLabel = options['loginLabel'] || 'login';
     this.loginErrorMessage = options['loginErrorMessage'] || 'Please include username and password';
     this.permissionStep = options['permissionStep'] || '';
+    this.appServer = options['apServer'] || '';
     this.permissionList = options['permissionList'] || {};
     this.permissionLabel = options['permissionLabel'] || '';
     this.allowLabel = options['allowLabel'] || 'Allow';
@@ -178,6 +180,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
             </div>
             <div class="modal-body">
               <p>{{ field.permissionStep }}</p>
+              <p>If this is your <strong>first</strong> GitLab login, please go <a target="_blank" rel="noopener noreferrer" href="{{ field.appServer }}">{{ field.appServer }}</a> to authenticate, then return to this page.</p>
               <ul>
                 <li *ngFor="let permission of field.permissionList">{{ permission }}</li>
               </ul>
