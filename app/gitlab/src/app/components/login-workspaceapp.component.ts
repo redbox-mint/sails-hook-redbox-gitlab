@@ -183,7 +183,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
               </ul>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" (click)="field.allow(form.value)">{{ field.allowLabel }}</button>
+              <button autofocus tabindex="1" type="button" class="btn btn-primary" (click)="field.allow(form.value)">{{ field.allowLabel }}</button>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ field.closeLabel }}</button>
             </div>
           </div>

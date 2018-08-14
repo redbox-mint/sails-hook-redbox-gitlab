@@ -52,7 +52,7 @@ export class GitlabService extends BaseService {
   }
 
   revokeToken() {
-    const wsUrl = this.brandingAndPortalUrl + '/ws/gitlab/revokeToken';
+    const wsUrl = this.brandingAndPortalUrl + `/ws/gitlab/revokeToken?ts=${new Date().getTime()}`;
     return this.http.get(
       wsUrl,
       this.options
@@ -68,7 +68,7 @@ export class GitlabService extends BaseService {
   }
 
   user() {
-    const wsUrl = this.brandingAndPortalUrl + '/ws/gitlab/user';
+    const wsUrl = this.brandingAndPortalUrl + `/ws/gitlab/user?ts=${new Date().getTime()}`;
     return this.http.get(
       wsUrl,
       this.options
@@ -84,7 +84,7 @@ export class GitlabService extends BaseService {
   }
 
   projects() {
-    const wsUrl = this.brandingAndPortalUrl + '/ws/gitlab/projects';
+    const wsUrl = this.brandingAndPortalUrl + `/ws/gitlab/projects?ts=${new Date().getTime()}`;
     return this.http.get(
       wsUrl,
       this.options
@@ -100,7 +100,7 @@ export class GitlabService extends BaseService {
   }
 
   projectsRelatedRecord({page, perPage}) {
-    const wsUrl = this.brandingAndPortalUrl + `/ws/gitlab/projectsRelatedRecord?page=${page}&perPage=${perPage}`;
+    const wsUrl = this.brandingAndPortalUrl + `/ws/gitlab/projectsRelatedRecord?page=${page}&perPage=${perPage}&ts=${new Date().getTime()}`;
     return this.http.get(
       wsUrl,
       this.options
@@ -235,7 +235,7 @@ export class GitlabService extends BaseService {
   }
 
   groups() {
-    const wsUrl = this.brandingAndPortalUrl + '/ws/gitlab/groups';
+    const wsUrl = this.brandingAndPortalUrl + `/ws/gitlab/groups?ts=${new Date().getTime()}`;
     //TODO: check namespace when creation
     return this.http.get(
       wsUrl,
@@ -248,7 +248,7 @@ export class GitlabService extends BaseService {
   }
 
   templates() {
-    const wsUrl = this.brandingAndPortalUrl + '/ws/gitlab/templates';
+    const wsUrl = this.brandingAndPortalUrl + `/ws/gitlab/templates?ts=${new Date().getTime()}`;
     //TODO: check namespace when creation
     return this.http.get(
       wsUrl,
