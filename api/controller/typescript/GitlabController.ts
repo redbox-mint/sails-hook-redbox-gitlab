@@ -213,6 +213,7 @@ export module Controllers {
         let workspaceId = null;
         let gitlab = {};
         let recordMetadata = null;
+        let rdmpTitle = '';
 
         return WorkspaceService.provisionerUser(this.config.provisionerUser)
           .flatMap(response => {
@@ -229,6 +230,7 @@ export module Controllers {
             record = _.merge(record, {type: this.config.recordType});
             record.rdmpOid = rdmpId;
             record.rdmpTitle = recordMetadata.title;
+            rdmpTitle = recordMetadata.title;
             const username = req.user.username;
             return WorkspaceService.createWorkspaceRecord(this.config, username, record, this.config.recordType, this.config.workflowStage);
           }).flatMap(response => {
@@ -239,6 +241,15 @@ export module Controllers {
               branch: branch, pathWithNamespace: pathWithNamespace,
               project: project, workspaceLink:rdmpId + '.' + workspaceId,
               filePath:'stash.workspace'
+            });
+          }).flatMap(() => {
+            sails.log.debug('addWorkspaceInfo:Pretty');
+            return GitlabService.addWorkspaceInfo({
+              config: this.config, token: gitlab['accessToken'].access_token,
+              branch: branch, pathWithNamespace: pathWithNamespace,
+              project: project,
+              workspaceLink: `Workspace linked to [${rdmpTitle}](${this.config.brandingAndPortalUrl}/record/view/${rdmpId}) in Stash`,
+              filePath: 'stash.md'
             });
           }).flatMap(() => {
             sails.log.debug('addParentRecordLink');
@@ -340,7 +351,7 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             const gitlab = response.info;
-            return GitlabService.create(this.config, gitlab.accessToken.access_token, creation);
+            return GitlabService.create(this.config, gitlab.accessToken.access_token, creation, group);
           }).subscribe(response => {
             sails.log.debug('updateRecordMeta');
             response.status = true;

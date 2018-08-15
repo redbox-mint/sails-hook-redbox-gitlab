@@ -211,6 +211,7 @@ var Controllers;
                 var workspaceId_1 = null;
                 var gitlab_1 = {};
                 var recordMetadata_1 = null;
+                var rdmpTitle_1 = '';
                 return WorkspaceService.provisionerUser(this.config.provisionerUser)
                     .flatMap(function (response) {
                     _this.config.redboxHeaders['Authorization'] = 'Bearer ' + response.token;
@@ -226,6 +227,7 @@ var Controllers;
                     record = _.merge(record, { type: _this.config.recordType });
                     record.rdmpOid = rdmpId_1;
                     record.rdmpTitle = recordMetadata_1.title;
+                    rdmpTitle_1 = recordMetadata_1.title;
                     var username = req.user.username;
                     return WorkspaceService.createWorkspaceRecord(_this.config, username, record, _this.config.recordType, _this.config.workflowStage);
                 }).flatMap(function (response) {
@@ -236,6 +238,15 @@ var Controllers;
                         branch: branch_2, pathWithNamespace: pathWithNamespace_1,
                         project: project_1, workspaceLink: rdmpId_1 + '.' + workspaceId_1,
                         filePath: 'stash.workspace'
+                    });
+                }).flatMap(function () {
+                    sails.log.debug('addWorkspaceInfo:Pretty');
+                    return GitlabService.addWorkspaceInfo({
+                        config: _this.config, token: gitlab_1['accessToken'].access_token,
+                        branch: branch_2, pathWithNamespace: pathWithNamespace_1,
+                        project: project_1,
+                        workspaceLink: "Workspace linked to [" + rdmpTitle_1 + "](" + _this.config.brandingAndPortalUrl + "/record/view/" + rdmpId_1 + ") in Stash",
+                        filePath: 'stash.md'
                     });
                 }).flatMap(function () {
                     sails.log.debug('addParentRecordLink');
@@ -337,7 +348,7 @@ var Controllers;
                 return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
                     .flatMap(function (response) {
                     var gitlab = response.info;
-                    return GitlabService.create(_this.config, gitlab.accessToken.access_token, creation);
+                    return GitlabService.create(_this.config, gitlab.accessToken.access_token, creation, group);
                 }).subscribe(function (response) {
                     sails.log.debug('updateRecordMeta');
                     response.status = true;

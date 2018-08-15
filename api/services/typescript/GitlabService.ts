@@ -35,7 +35,7 @@ export module Services {
       'groups',
       'templates',
       'addWorkspaceInfo'
-    ]
+    ];
 
     token(config: any, username: string, password: string) {
       const post = requestPromise({
@@ -134,13 +134,13 @@ export module Services {
       });
     }
 
-    create(config: any, token: string, creation: any) {
+    create(config: any, token: string, creation: any, group: any) {
       const body = {
         name: creation.name,
         description: creation.description
       };
-      if(creation.namespaceId) {
-        body.namespace_id = creation.namespaceId
+      if(group.id) {
+        body.namespace_id = group.id
       }
       const post = requestPromise({
         uri: config.host + `/api/v4/projects?access_token=${token}`,
@@ -165,16 +165,23 @@ export module Services {
     }
 
     groups(config: any, token: string) {
+      // Gets all groups that user has access to and can create projects;
+      // Group access 50 owner  TODO: see if and how to do with group level 40 => Maintainer access
+      // https://docs.gitlab.com/ce/api/members.html
+      // https://docs.gitlab.com/ce/user/permissions.html#group-members-permissions
       const get = requestPromise({
-        uri: config.host + `/api/v4/groups?access_token=${token}`,
+        uri: config.host + `/api/v4/groups?access_token=${token}&owned=true&min_access_level=50`,
         json: true
       });
       return Observable.fromPromise(get);
     }
 
     templates(config: any, token: string, templateTag: string) {
+      // Gets templates from all projects that the user has min_access_level of 20
+      // https://docs.gitlab.com/ce/api/members.html
+      // https://docs.gitlab.com/ce/api/projects.html#list-all-projects
       const get = requestPromise({
-        uri: config.host + `/api/v4/projects?access_token=${token}`,
+        uri: config.host + `/api/v4/projects?access_token=${token}&min_access_level=20`,
         json: true
       });
       return get

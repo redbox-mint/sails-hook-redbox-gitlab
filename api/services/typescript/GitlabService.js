@@ -129,13 +129,13 @@ var Services;
                 }
             });
         };
-        GitlabService.prototype.create = function (config, token, creation) {
+        GitlabService.prototype.create = function (config, token, creation, group) {
             var body = {
                 name: creation.name,
                 description: creation.description
             };
-            if (creation.namespaceId) {
-                body.namespace_id = creation.namespaceId;
+            if (group.id) {
+                body.namespace_id = group.id;
             }
             var post = requestPromise({
                 uri: config.host + ("/api/v4/projects?access_token=" + token),
@@ -159,14 +159,14 @@ var Services;
         };
         GitlabService.prototype.groups = function (config, token) {
             var get = requestPromise({
-                uri: config.host + ("/api/v4/groups?access_token=" + token),
+                uri: config.host + ("/api/v4/groups?access_token=" + token + "&owned=true&min_access_level=50"),
                 json: true
             });
             return Rx_1.Observable.fromPromise(get);
         };
         GitlabService.prototype.templates = function (config, token, templateTag) {
             var get = requestPromise({
-                uri: config.host + ("/api/v4/projects?access_token=" + token),
+                uri: config.host + ("/api/v4/projects?access_token=" + token + "&min_access_level=20"),
                 json: true
             });
             return get
