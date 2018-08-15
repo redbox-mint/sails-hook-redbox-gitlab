@@ -139,7 +139,7 @@ export module Services {
         name: creation.name,
         description: creation.description
       };
-      if(group.id) {
+      if(!group.isUser && group.id) {
         body.namespace_id = group.id
       }
       const post = requestPromise({
