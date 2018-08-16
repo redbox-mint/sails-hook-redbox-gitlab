@@ -110,6 +110,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
     this.loading = true;
     jQuery('#loginPermissionModal').modal('hide');
     this.gitlabService.token(value).then((response: any) => {
+      this.loading = false;
       if(!response.status){
         this.displayLoginMessage({error: true, value: response.error.error_description});
       } else {
