@@ -138,7 +138,7 @@ module.exports = {
         ],
         allowLabel: 'Allow',
         closeLabel: 'Close',
-        loginErrorMessage: 'Please include username and password'
+        loginErrorMessage: 'There was a problem authenticating you. Check that you have logged into gitlab at least once before and check your password. Else please log a job in ServiceConnect'
       }
     },
     {

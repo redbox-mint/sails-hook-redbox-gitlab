@@ -46,7 +46,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
     this.usernameLabel = options['usernameLabel'] || 'username';
     this.passwordLabel = options['passwordLabel'] || 'password';
     this.loginLabel = options['loginLabel'] || 'login';
-    this.loginErrorMessage = options['loginErrorMessage'] || 'Please include username and password';
+    this.loginErrorMessage = options['loginErrorMessage'] || 'There was a problem authenticating you. Check that you have logged into gitlab at least once before and check your password.';
     this.permissionStep = options['permissionStep'] || '';
     this.appServer = options['apServer'] || 'https://git-test.research.uts.edu.au';
     this.permissionList = options['permissionList'] || {};
@@ -122,7 +122,8 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
 
   displayLoginMessage(message: any) {
     this.loginError = message.error;
-    this.loginErrorMessage = message.value;
+    // Defaulting loginErrorMessage to form config to every error.
+    //this.loginErrorMessage = message.value;
   }
 
   userInfo() {
