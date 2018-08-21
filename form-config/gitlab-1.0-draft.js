@@ -75,7 +75,7 @@ module.exports = {
         ],
         branch: 'master',
         createLabel: 'Create',
-        dismissLabel: 'Ok',
+        dismissLabel: 'Close',
         createWorkspaceLabel: 'Create Workspace',
         workspaceDetailsLabel: 'Workspace Details',
         selectSpace: 'Select Space',
@@ -119,7 +119,7 @@ module.exports = {
         statusLabel: 'No links, Linking to workspace ...',
         processingSuccess: 'Your workspace was linked succesfully',
         processingFail: 'Your workspace is linked with another RDMP',
-        closeLabel: 'Ok'
+        closeLabel: 'Close'
       }
     },
     {
