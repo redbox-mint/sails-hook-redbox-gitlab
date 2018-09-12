@@ -48,7 +48,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
     this.loginLabel = options['loginLabel'] || 'login';
     this.loginErrorMessage = options['loginErrorMessage'] || 'There was a problem authenticating you. Check that you have logged into gitlab at least once before and check your password.';
     this.permissionStep = options['permissionStep'] || '';
-    this.appServer = options['apServer'] || 'https://git-test.research.uts.edu.au';
+    this.appServer = options['appServer'] || 'https://git.research.uts.edu.au';
     this.permissionList = options['permissionList'] || {};
     this.permissionLabel = options['permissionLabel'] || '';
     this.allowLabel = options['allowLabel'] || 'Allow';
