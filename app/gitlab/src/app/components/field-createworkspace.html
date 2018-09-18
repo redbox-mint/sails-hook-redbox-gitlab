@@ -18,24 +18,24 @@
           <form *ngIf="!field.processing" #form="ngForm" novalidate autocomplete="off">
             <div class="form-group">
               <h4>{{ field.selectSpace }}</h4>
-              <select class="form-control" [(ngModel)]="field.creation.group" name="creationNamespace">
+              <select class="form-control" [(ngModel)]="field.creation.group" name="creationNamespace" attr.aria-label="{{ field.selectSpace }}">
                 <option *ngFor="let g of field.groups" [ngValue]="g"
                         [selected]="field.creation.group === g">{{ g.path }}</option>
               </select>
             </div>
             <div class="form-group">
               <h4>{{ field.nameWorkspace }}</h4>
-              <input required minlength="4" type="text" class="form-control" name="creationName" [(ngModel)]="field.creation.name">
+              <input required minlength="4" type="text" class="form-control" name="creationName" [(ngModel)]="field.creation.name" attr.aria-label="{{ field.nameWorkspace }}">
             </div>
             <div class="form-group">
               <h4>{{ field.addDescription }}</h4>
-              <input required minlength="4" type="text" class="form-control" name="description" [(ngModel)]="field.creation.description">
+              <input required minlength="4" type="text" class="form-control" name="description" [(ngModel)]="field.creation.description" attr.aria-label="{{ field.addDescription }}">
             </div>
           </form>
           <form *ngIf="!field.processing" #form="ngForm" novalidate autocomplete="off">
             <div class="form-group">
               <h4>{{ field.selectTemplate }}</h4>
-              <select class="form-control" [(ngModel)]="field.creation.template" name="creationTemplate">
+              <select class="form-control" [(ngModel)]="field.creation.template" name="creationTemplate" attr.aria-label="{{ field.selectTemplate }}">
                 <option *ngFor="let t of field.templates" [ngValue]="t"
                         [selected]="field.creation.template === t">{{ t.pathWithNamespace || 'No Template' }}</option>
               </select>
