@@ -161,11 +161,11 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
         <form #form="ngForm"  novalidate autocomplete="off">
           <div class="form-group">
             <label>{{ field.usernameLabel }}</label>
-            <input type="text" class="form-control" name="username" ngModel>
+            <input type="text" class="form-control" name="username" ngModel attr.aria-label="{{ field.usernameLabel }}">
           </div>
           <div class="form-group">
             <label>{{ field.passwordLabel }}</label>
-            <input type="password" class="form-control" name="password" ngModel>
+            <input type="password" class="form-control" name="password" ngModel attr.aria-label="{{ field.passwordLabel }}">
           </div>
           <button (click)="field.validate(form.value)" class="btn btn-primary"
                   type="submit">{{ field.loginLabel }}</button>
