@@ -15,7 +15,7 @@ commit_website_files() {
 }
 
 upload_files() {
-  git remote add build-origin "https://andrewbrazzatti:$GH_TOKEN@github.com/moisbo/sails-hook-redbox-gitlab"
+  git remote add build-origin "https://moisbo:$GH_TOKEN@github.com/moisbo/sails-hook-redbox-gitlab"
   git push build-origin dev_build --force
 }
 
