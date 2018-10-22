@@ -70,7 +70,10 @@ var Controllers;
                         username: response.username,
                         id: response.id
                     };
-                    return WorkspaceService.createWorkspaceInfo(userId_1, _this.config.appName, { user: gitlabUser, accessToken: accessToken });
+                    return WorkspaceService.createWorkspaceInfo(userId_1, _this.config.appName, {
+                        user: gitlabUser,
+                        accessToken: accessToken
+                    });
                 })
                     .subscribe(function (response) {
                     sails.log.debug('createWorkspaceInfo');
@@ -155,7 +158,12 @@ var Controllers;
                 return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
                     .flatMap(function (response) {
                     gitlab = response.info;
-                    return GitlabService.projects({ config: _this.config, token: gitlab['accessToken'].access_token, page: page, perPage: perPage });
+                    return GitlabService.projects({
+                        config: _this.config,
+                        token: gitlab['accessToken'].access_token,
+                        page: page,
+                        perPage: perPage
+                    });
                 })
                     .flatMap(function (response) {
                     projectHeaders = response.headers;
@@ -185,8 +193,11 @@ var Controllers;
                     _this.ajaxOk(req, res, null, {
                         projects: currentProjects,
                         meta: {
-                            previousPage: projectHeaders['x-prev-page'], totalPages: projectHeaders['x-total-pages'],
-                            total: projectHeaders['x-total'], nextPage: projectHeaders['x-next-page'], page: projectHeaders['x-page'],
+                            previousPage: projectHeaders['x-prev-page'],
+                            totalPages: projectHeaders['x-total-pages'],
+                            total: projectHeaders['x-total'],
+                            nextPage: projectHeaders['x-next-page'],
+                            page: projectHeaders['x-page'],
                             perPage: projectHeaders['x-per-page']
                         }
                     });
@@ -212,12 +223,9 @@ var Controllers;
                 var gitlab_1 = {};
                 var recordMetadata_1 = null;
                 var rdmpTitle_1 = '';
-                return WorkspaceService.provisionerUser(this.config.provisionerUser)
+                var userId = req.user.id;
+                return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
                     .flatMap(function (response) {
-                    _this.config.redboxHeaders['Authorization'] = 'Bearer ' + response.token;
-                    var userId = req.user.id;
-                    return WorkspaceService.workspaceAppFromUserId(userId, _this.config.appName);
-                }).flatMap(function (response) {
                     gitlab_1 = response.info;
                     return WorkspaceService.getRecordMeta(_this.config, rdmpId_1);
                 }).flatMap(function (response) {
@@ -290,7 +298,10 @@ var Controllers;
                 }).subscribe(function (response) {
                     sails.log.debug('checkLink:getRecordMeta');
                     var parsedResponse = _this.parseResponseFromRepo(response);
-                    var wI = parsedResponse.content ? _this.workspaceInfoFromRepo(parsedResponse.content) : { rdmp: null, workspace: null };
+                    var wI = parsedResponse.content ? _this.workspaceInfoFromRepo(parsedResponse.content) : {
+                        rdmp: null,
+                        workspace: null
+                    };
                     sails.log.debug(wI);
                     _this.ajaxOk(req, res, null, wI);
                 }, function (error) {
@@ -431,7 +442,11 @@ var Controllers;
                 return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
                     .flatMap(function (response) {
                     var gitlab = response.info;
-                    return GitlabService.project({ config: _this.config, token: gitlab.accessToken.access_token, pathWithNamespace: pathWithNamespace });
+                    return GitlabService.project({
+                        config: _this.config,
+                        token: gitlab.accessToken.access_token,
+                        pathWithNamespace: pathWithNamespace
+                    });
                 })
                     .subscribe(function (response) {
                     sails.log.debug('project');
@@ -460,7 +475,9 @@ var Controllers;
                 }).subscribe(function (response) {
                     var simple = [];
                     if (response.value) {
-                        simple = response.value.map(function (p) { return { id: p.id, pathWithNamespace: p.path_with_namespace, name: p.path, namespace: p.namespace.path }; });
+                        simple = response.value.map(function (p) {
+                            return { id: p.id, pathWithNamespace: p.path_with_namespace, name: p.path, namespace: p.namespace.path };
+                        });
                     }
                     _this.ajaxOk(req, res, null, simple);
                 }, function (error) {
