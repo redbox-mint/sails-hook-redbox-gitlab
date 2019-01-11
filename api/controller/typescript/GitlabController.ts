@@ -533,7 +533,7 @@ export module Controllers {
         result.content = response.body.content;
         var url_parts = url.parse(response.request.uri.href, true);
         var query = url_parts.query;
-        result.path = query.namespace;
+        result.path = decodeURI(query.namespace);
       } else {
         result.content = null;
         result.path = response.path;
