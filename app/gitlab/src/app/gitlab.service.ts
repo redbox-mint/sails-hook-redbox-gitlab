@@ -28,7 +28,7 @@ export class GitlabService extends BaseService {
     return subs;
   }
 
-  protected emitInit() {
+  public emitInit() {
     if (this.brandingAndPortalUrl) {
       this.initSubject.next('');
     }

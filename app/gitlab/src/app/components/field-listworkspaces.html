@@ -17,7 +17,7 @@
           </td>
         </ng-container>
         <td>
-            <span *ngIf="item.rdmp.info && item.rdmp.info.rdmp; else isNotLinked ">
+            <span *ngIf="item.rdmp && item.rdmp.info && item.rdmp.info.rdmp; else isNotLinked ">
               <button disabled type="button" class="btn btn-success btn-block" *ngIf="item.rdmp.info.rdmp === field.rdmp"> Linked </button>
               <button disabled type="button" class="btn btn-info btn-block" *ngIf="item.rdmp.info.rdmp != field.rdmp"> Linked to another RDMP</button>
             </span>
