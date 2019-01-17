@@ -1,9 +1,9 @@
 import {Injectable, Inject} from '@angular/core';
-import {Http} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {Http} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/delay';
+import {Observable} from 'rxjs/Observable';
 
 import {BaseService} from "./shared/base-service";
 import {ConfigService} from "./shared/config-service";
@@ -34,12 +34,13 @@ export class GitlabService extends BaseService {
     }
   }
 
-  token(login: any) {
+  token(login) {
     //build wsUrl here with server client
     const wsUrl = this.brandingAndPortalUrl + '/ws/gitlab/token';
     return this.http.post(
       wsUrl,
-      {username: login.username, password: login.password}, this.options
+      {username: login.username, password: login.password},
+      this.options
     )
       .toPromise()
       .then((res: any) => {

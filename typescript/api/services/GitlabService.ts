@@ -1,8 +1,10 @@
-import { Observable } from 'rxjs/Rx';
-//TODO: How to import this next line CoreService?
-import services = require('../../core/typescript/services/CoreService');//'../../../../../typescript/services/CoreService.js');
-import { Sails, Model } from "sails";
+import {Observable, from, of, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators/catchError';
+
+import {Sails, Model} from "sails";
 import * as requestPromise from "request-promise";
+
+import services = require('../core/CoreService.js');
 
 declare var RecordsService, BrandingService;
 declare var sails: Sails;
@@ -12,14 +14,6 @@ declare var Institution, User: Model;
 export module Services {
 
   export class GitlabService extends services.Services.Core.Service {
-
-    config: Config;
-    recordType: string;
-    formName: string;
-    brandingAndPortalUrl: string;
-    parentRecord: string;
-    bearer: string;
-    redboxHeaders: {};
 
     protected _exportedMethods: any = [
       'token',
@@ -46,7 +40,7 @@ export module Services {
         },
         json: true
       });
-      return Observable.fromPromise(post);
+      return from(post);
     }
 
     user(config: any, token: string) {
@@ -54,7 +48,7 @@ export module Services {
         uri: config.host + `/api/v4/user?access_token=${token}`,
         json: true
       });
-      return Observable.fromPromise(get);
+      return from(get);
     }
 
     project({config, token, pathWithNamespace}) {
@@ -63,7 +57,7 @@ export module Services {
         uri: config.host + `/api/v4/projects/${pathWithNamespace}?access_token=${token}`,
         json: true
       });
-      return Observable.fromPromise(get);
+      return from(get);
     }
 
     projects({config, token, page, perPage}) {
@@ -73,13 +67,13 @@ export module Services {
         json: true,
         resolveWithFullResponse: true
       });
-      return Observable.fromPromise(get);
+      return from(get);
     }
 
     fork(config: any, token: string, creation: any) {
       const origin = creation.template.id;
       let body = {};
-      if(!creation.group.isUser) {
+      if (!creation.group.isUser) {
         body = {namespace: creation.group.id};
       }
       const post = requestPromise({
@@ -88,7 +82,7 @@ export module Services {
         body: body,
         json: true
       });
-      return Observable.fromPromise(post);
+      return from(post);
     }
 
     deleteForkRel(config: any, token: string, namespace: string, project: string) {
@@ -98,7 +92,7 @@ export module Services {
         method: 'DELETE',
         json: true
       });
-      return Observable.fromPromise(deleteRequest);
+      return from(deleteRequest);
     }
 
     addWorkspaceInfo({config, token, branch, pathWithNamespace, project, workspaceLink, filePath}) {
@@ -114,7 +108,7 @@ export module Services {
         },
         json: true
       });
-      return Observable.fromPromise(post);
+      return from(post);
     }
 
     readFileFromRepo(config: any, token: string, branch: string, projectNameSpace: string, filePath: string) {
@@ -125,13 +119,16 @@ export module Services {
         method: 'GET',
         resolveWithFullResponse: true
       });
-      return Observable.fromPromise(get).catch(error => {
-        if(error.statusCode === 404 || error.statusCode === 403) {
-          return Observable.of({path: projectNameSpace, content: {}});
-        } else {
-          return Observable.throw(error);
-        }
-      });
+      return from(get)
+        .pipe(
+          catchError(error => {
+            if (error.statusCode === 404 || error.statusCode === 403) {
+              return of({path: projectNameSpace, content: {}});
+            } else {
+              return throwError(error);
+            }
+          })
+        );
     }
 
     create(config: any, token: string, creation: any, group: any) {
@@ -139,8 +136,8 @@ export module Services {
         name: creation.name,
         description: creation.description
       };
-      if(!group.isUser && group.id) {
-        body.namespace_id = group.id
+      if (!group.isUser && group.id) {
+        body['namespace_id'] = group.id
       }
       const post = requestPromise({
         uri: config.host + `/api/v4/projects?access_token=${token}`,
@@ -148,20 +145,22 @@ export module Services {
         body: body,
         json: true
       });
-      return Observable.fromPromise(post);
+      return from(post);
     }
 
     updateProject(config: any, token: string, pathWithNamespace: string, project: any) {
       pathWithNamespace = encodeURIComponent(pathWithNamespace);
       const body = {};
-      project.attributes.map(p => { body[p.name] = p.newValue; });
+      project.attributes.map(p => {
+        body[p.name] = p.newValue;
+      });
       const put = requestPromise({
         uri: config.host + `/api/v4/projects/${pathWithNamespace}?access_token=${token}`,
         method: 'PUT',
         body: body,
         json: true
       });
-      return Observable.fromPromise(put);
+      return from(put);
     }
 
     groups(config: any, token: string) {
@@ -173,7 +172,7 @@ export module Services {
         uri: config.host + `/api/v4/groups?access_token=${token}&owned=true&min_access_level=50`,
         json: true
       });
-      return Observable.fromPromise(get);
+      return from(get);
     }
 
     templates(config: any, token: string, templateTag: string) {
@@ -187,7 +186,7 @@ export module Services {
       return get
         .then(response => {
           const templates = response.filter(o => o.tag_list.find(t => t === templateTag));
-          return Observable.of(templates);
+          return of(templates);
         }).catch(error => {
           return Observable.throw(error);
         });
@@ -195,9 +194,6 @@ export module Services {
 
   }
 
-  class Config {
-    host: string;
-  }
 }
 
 module.exports = new Services.GitlabService().exports();

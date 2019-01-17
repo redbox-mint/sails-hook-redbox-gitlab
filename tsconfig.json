@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
     "isolatedModules": false,
@@ -14,7 +14,9 @@
     "noLib": false,
     "preserveConstEnums": true,
     "suppressImplicitAnyIndexErrors": true,
-    "sourceMap": false
+    "sourceMap": false,
+    "outDir": "./",
+    "rootDir": "./typescript"
   },
   "exclude": [
     "node_modules/**",

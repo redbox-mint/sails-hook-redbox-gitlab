@@ -1,12 +1,12 @@
-import { Output, EventEmitter, Component, OnInit, Inject, Injector} from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { SimpleComponent } from '../shared/form/field-simple.component';
-import { FieldBase } from '../shared/form/field-base';
+import {Output, EventEmitter, Component, OnInit, Inject, Injector} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {SimpleComponent} from '../shared/form/field-simple.component';
+import {FieldBase} from '../shared/form/field-base';
 import * as _ from "lodash-es";
 
 declare var jQuery: any;
 
-import { GitlabService } from '../gitlab.service';
+import {GitlabService} from '../gitlab.service';
 
 /**
  * Contributor Model
@@ -63,7 +63,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
     //this.fieldMap._rootComp['loginMessage'].subscribe(that.displayLoginMessage);
   }
 
-  revoke(){
+  revoke() {
     this.checkLogin(false);
   }
 
@@ -87,8 +87,8 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
     return this.formModel;
   }
 
-  setValue(value:any) {
-    this.formModel.patchValue(value, {emitEvent: false });
+  setValue(value: any) {
+    this.formModel.patchValue(value, {emitEvent: false});
     this.formModel.markAsTouched();
   }
 
@@ -98,9 +98,9 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
   }
 
   validate(value: any) {
-    if(value.username && value.password) {
+    if (value.username && value.password) {
       jQuery('#loginPermissionModal').modal('show');
-    }else {
+    } else {
       this.loginError = true;
     }
   }
@@ -111,12 +111,16 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
     jQuery('#loginPermissionModal').modal('hide');
     this.gitlabService.token(value).then((response: any) => {
       this.loading = false;
-      if(!response.status){
+      if (!response.status) {
         this.displayLoginMessage({error: true, value: response.error.error_description});
       } else {
         this.displayLoginMessage({error: false, value: ''});
         this.userInfo();
       }
+    }).catch((error) => {
+      console.error(error);
+      this.displayLoginMessage({error: true, value: 'Cannot authenticate gitlab'});
+      this.loading = false;
     });
   }
 

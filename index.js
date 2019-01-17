@@ -2,8 +2,8 @@ const ncp = require('ncp').ncp;
 const fs = require('fs-extra');
 const _ = require('lodash');
 
-const GitlabController = require('./api/controller/typescript/GitlabController');
-const GitlabService = require('./api/services/typescript/GitlabService');
+const GitlabController = require('./api/controllers/GitlabController.js');
+const GitlabService = require('./api/services/GitlabService.js');
 const recordTypeConfig = require('./config/recordtype.js');
 const workflowConfig = require('./config/workflow.js');
 const workspaceTypeConfig = require('./config/workspacetype.js');
@@ -24,7 +24,7 @@ module.exports = function (sails) {
         angularDest = 'test/angular/gitlab';
       }
       else {
-        angularOrigin = 'node_modules/sails-hook-redbox-gitlab/app/gitlab/dist';
+        angularOrigin = './node_modules/sails-hook-redbox-gitlab/app/gitlab/dist';
         angularDest = './assets/angular/gitlab';
       }
       if (fs.existsSync(angularDest)) {

@@ -1,23 +1,21 @@
-declare var module;
+declare var module, _;
 declare var sails, Model;
-import {Observable} from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
+declare const Buffer;
 
-const url = require('url');
-const local = require('../../../config/local');
+import { Observable, from, throwError } from 'rxjs';
+import * as url from 'url';
 
 declare var GitlabService, BrandingService, WorkspaceService;
 /**
  * Package that contains all Controllers.
  */
 
-import controller = require('../../core/typescript/controllers/CoreController');//'../../../../../typescript/controllers/CoreController.js');
+import controller = require('../core/CoreController.js');
 
 export module Controllers {
 
   /**
    * Workspace related features....
-   *
    *
    */
   export class GitlabController extends controller.Controllers.Core.Controller {
@@ -37,7 +35,8 @@ export module Controllers {
       'createWithTemplate',
       'project',
       'updateProject'
-    ]
+    ];
+
     protected config: any;
 
     constructor() {
@@ -69,7 +68,7 @@ export module Controllers {
             sails.log.debug('token');
             accessToken = response;
             sails.log.debug(accessToken);
-            return GitlabService.user(this.config, accessToken.access_token);
+            return GitlabService.user(this.config, accessToken['access_token']);
           }).flatMap(response => {
             sails.log.debug('gitlab user');
             sails.log.debug(response);
@@ -130,13 +129,13 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             if (!response) {
-              return Observable.throw('no workspace app found');
+              return throwError('no workspace app found');
             }
             gitlab = response.info;
-            return GitlabService.user(this.config, gitlab.accessToken.access_token)
+            return GitlabService.user(this.config, gitlab['accessToken'].access_token)
           }).subscribe(response => {
             response.status = true;
-            this.ajaxOk(req, res, null, {status: true, user: gitlab.user});
+            this.ajaxOk(req, res, null, {status: true, user: gitlab['user']});
           }, error => {
             sails.log.error(error);
             const errorMessage = `Failed to get user workspace info of userId: ${userId}`;
@@ -531,9 +530,11 @@ export module Controllers {
       const result = {content: null, path: ''};
       if (response.body && response.body.content) {
         result.content = response.body.content;
-        var url_parts = url.parse(response.request.uri.href, true);
-        var query = url_parts.query;
-        result.path = decodeURI(query.namespace);
+        const url_parts = url.parse(response.request.uri.href, true);
+        const query = url_parts.query;
+        const namespace = query['namespace'] || '';
+        //@ts-ignore
+        result.path = decodeURI(namespace);
       } else {
         result.content = null;
         result.path = response.path;

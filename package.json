@@ -15,18 +15,22 @@
   "author": "Moises Sacal",
   "license": "ISC",
   "dependencies": {
-    "lodash": "^4.17.5",
+    "fs-extra": "^7.0.0",
+    "lodash": "^4.17.10",
     "ncp": "^2.0.0",
     "request": "^2.85.0",
     "request-promise": "^4.2.0",
-    "rxjs": "5.5.10",
+    "rxjs": "6.3.3",
+    "rxjs-compat": "6.3.3",
     "sails": "^1.0.0",
-    "fs-extra": "^7.0.0"
+    "url": "^0.11.0"
   },
   "devDependencies": {
+    "@types/node": "^10.12.18",
+    "@types/lodash": "^4.14.111",
     "mocha": "^5.1.1",
-    "sails": "^1.0.0",
     "path-exists": "^3.0.0",
+    "sails": "^1.0.0",
     "typescript": ">=2.4.2 <2.7.0"
   }
 }
