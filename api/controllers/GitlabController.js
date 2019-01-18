@@ -9,6 +9,7 @@ var Controllers;
         constructor() {
             super();
             this._exportedMethods = [
+                'info',
                 'token',
                 'user',
                 'projectsRelatedRecord',
@@ -23,6 +24,10 @@ var Controllers;
                 'updateProject'
             ];
             this.config = new Config();
+        }
+        info(req, res) {
+            this.config.set();
+            this.ajaxOk(req, res, null, { host: this.config.host, status: true });
         }
         token(req, res) {
             sails.log.debug('get token:');

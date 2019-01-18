@@ -34,6 +34,22 @@ export class GitlabService extends BaseService {
     }
   }
 
+  info() {
+    const wsUrl = this.brandingAndPortalUrl + `/ws/gitlab/info`;
+    return this.http.get(
+      wsUrl,
+      this.options
+    )
+      .toPromise()
+      .then((res: any) => {
+        return this.extractData(res);
+      })
+      .catch((res: any) => {
+        console.log(res);
+        return this.extractData(res);
+      });
+  }
+
   token(login) {
     //build wsUrl here with server client
     const wsUrl = this.brandingAndPortalUrl + '/ws/gitlab/token';

@@ -131,7 +131,6 @@ module.exports = {
         passwordLabel: 'password',
         loginLabel: 'Login',
         permissionStep: 'Stash is requesting from Gitlab the following permissions:',
-        appServer: 'https://git.research.uts.edu.au',
         permissionList: [
           'Create Repositories',
           'Write information into your repositories'

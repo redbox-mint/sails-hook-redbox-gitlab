@@ -23,6 +23,7 @@ export module Controllers {
      * Exported methods, accessible from internet.
      */
     protected _exportedMethods: any = [
+      'info',
       'token',
       'user',
       'projectsRelatedRecord',
@@ -42,6 +43,11 @@ export module Controllers {
     constructor() {
       super();
       this.config = new Config();
+    }
+
+    public info(req, res) {
+      this.config.set();
+      this.ajaxOk(req, res, null, {host: this.config.host, status: true});
     }
 
     public token(req, res) {

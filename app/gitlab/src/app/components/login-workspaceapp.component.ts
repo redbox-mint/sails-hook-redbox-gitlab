@@ -48,7 +48,6 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
     this.loginLabel = options['loginLabel'] || 'login';
     this.loginErrorMessage = options['loginErrorMessage'] || 'There was a problem authenticating you. Check that you have logged into gitlab at least once before and check your password.';
     this.permissionStep = options['permissionStep'] || '';
-    this.appServer = options['appServer'] || 'https://git.research.uts.edu.au';
     this.permissionList = options['permissionList'] || {};
     this.permissionLabel = options['permissionLabel'] || '';
     this.allowLabel = options['allowLabel'] || 'Allow';
@@ -69,8 +68,11 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
 
   checkLogin(status: boolean) {
     this.loggedIn = this.fieldMap._rootComp.loggedIn = status;
-    this.isLoaded = true;
-    this.loading = false;
+    this.gitlabService.info().then(res => {
+      this.appServer = res.host;
+      this.isLoaded = true;
+      this.loading = false;
+    });
   }
 
   createFormModel(valueElem: any = undefined): any {
@@ -161,7 +163,7 @@ export class LoginWorkspaceAppField extends FieldBase<any> {
     <div *ngIf="!field.loggedIn && field.isLoaded && !field.loading" class="padding-bottom-10">
       <div class="">
         <h4>{{ field.permissionStep }}</h4>
-        <p>If this is your <strong>first time</strong> GitLab login, please go <a target="_blank" rel="noopener noreferrer" href="{{ field.appServer }}">{{ field.appServer }}</a> to initialise your account, then return to this page.</p>
+        <p>If this is your <strong>first time</strong> GitLab login, please go to <a target="_blank" rel="noopener noreferrer" href="{{ field.appServer }}">{{ field.appServer }}</a> to initialise your account, then return to this page.</p>
         <form #form="ngForm"  novalidate autocomplete="off">
           <div class="form-group">
             <label>{{ field.usernameLabel }}</label>

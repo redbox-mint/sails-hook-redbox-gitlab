@@ -50,6 +50,7 @@ module.exports = function (sails) {
     routes: {
       before: {},
       after: {
+        'get /:branding/:portal/ws/gitlab/info': GitlabController.info,
         'get /:branding/:portal/ws/gitlab/user': GitlabController.user,
         'post /:branding/:portal/ws/gitlab/token': GitlabController.token,
         'get /:branding/:portal/ws/gitlab/revokeToken': GitlabController.revokeToken,
