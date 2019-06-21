@@ -1,3 +1,3 @@
 #! /bin/sh
 git clone "https://github.com/redbox-mint/redbox-portal.git"
-ng build --prod --build-optimizer --output-hashing=none
+node_modules/.bin/ng build --prod --build-optimizer --output-hashing=none
