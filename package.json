@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-redbox-gitlab",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "This hook will add provisioner functionality and front end app for Gitlab Integration",
   "main": "index.js",
   "sails": {
@@ -13,7 +13,7 @@
     "compile": "node_modules/.bin/tsc --project tsconfig.json"
   },
   "author": "Moises Sacal",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "dependencies": {
     "fs-extra": "^8.0.1",
     "lodash": "^4.17.10",
@@ -28,7 +28,7 @@
   "devDependencies": {
     "@types/node": "^12.0.8",
     "@types/lodash": "^4.14.134",
-    "mocha": "^5.1.1",
+    "mocha": "^6.1.4",
     "path-exists": "^4.0.0",
     "sails": "^1.0.0",
     "typescript": ">=2.4.2 <2.7.0"
