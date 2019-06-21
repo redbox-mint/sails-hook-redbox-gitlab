@@ -1,7 +1,7 @@
 {
   "name": "sails-hook-redbox-gitlab",
   "version": "1.0.0",
-  "description": "This hook will add provisioner functionality and front end app for Gitlab Integration",
+  "description": "This hook will add functionality to redbox for Gitlab Integration",
   "main": "index.js",
   "sails": {
     "isHook": true,
