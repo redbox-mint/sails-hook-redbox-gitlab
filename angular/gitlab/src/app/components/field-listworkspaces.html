@@ -1,0 +1,42 @@
+<div *ngIf="field.loggedIn" class="padding-bottom-10">
+  <div class="">
+    <table class="table">
+      <thead>
+      <tr>
+        <ng-container *ngFor="let header of field.columns"><th>{{ header.label }}</th></ng-container>
+        <th>{{ field.rdmpLinkLabel }}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of field.workspaces">
+        <ng-container *ngFor="let column of field.columns">
+          <td *ngIf="column.show != false">
+            <span *ngIf="column.link; else noProcessing "><a target="_blank" rel="noopener noreferrer" href="{{ item[column.property] }}">{{ item[column.property] }}</a></span>
+            <ng-template #multivalue></ng-template>
+            <ng-template #noProcessing><span >{{ item[column.property] }}</span></ng-template>
+          </td>
+        </ng-container>
+        <td>
+            <span *ngIf="item.rdmp && item.rdmp.info && item.rdmp.info.rdmp; else isNotLinked ">
+              <button disabled type="button" class="btn btn-success btn-block" *ngIf="item.rdmp.info.rdmp === field.rdmp"> Linked </button>
+              <button disabled type="button" class="btn btn-info btn-block" *ngIf="item.rdmp.info.rdmp != field.rdmp"> Linked to another RDMP</button>
+            </span>
+          <ng-template #isNotLinked>
+            <button type="button" class="btn btn-info btn-block" (click)="field.linkWorkspace(item)"> Link </button>
+          </ng-template>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <pagination [directionLinks]="false" [boundaryLinks]="true" [totalItems]="field.workspacesMeta.totalCount"
+                [(ngModel)]="field.currentPage" (pageChanged)="field.pageChanged($event)" class="pagination-sm"></pagination>
+    <div *ngIf="field.loading" class="">
+      <img class="center-block" src="/images/loading.svg">
+    </div>
+    <p *ngIf="field.failedObjects.length > 0">There were {{ field.failedObjects.length }} records that failed to load</p>
+    <p *ngIf="field.accessDeniedObjects.length > 0">There were {{ field.accessDeniedObjects.length }} records that you do not have access to</p>
+  </div>
+  <div class="">
+    <button type="button" class="btn btn-default" (click)="field.listWorkspaces()"><i class="fa fa-refresh"></i>&nbsp;{{ field.syncLabel }}</button>
+  </div>
+</div>
