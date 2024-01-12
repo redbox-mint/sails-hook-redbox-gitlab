@@ -1,44 +1,24 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "isolatedModules": false,
-    "jsx": "react",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "declaration": false,
-    "noImplicitAny": false,
-    "noImplicitUseStrict": false,
-    "removeComments": true,
-    "noLib": false,
-    "preserveConstEnums": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "sourceMap": false,
-    "outDir": "./",
-    "rootDir": "./typescript"
-  },
-  "exclude": [
-    "node_modules/**",
-    "typings/browser/**",
-    "typings/browser.d.ts",
-    "test/integration/**/*.ts"
-  ],
-  "include": [
-    "typescript/**/*.ts",
-    "api/**/*.ts",
-    "core/**/*.ts",
-    "assets/angular/**/*.ts"
-  ],
-  "compileOnSave": true,
-  "buildOnSave": false,
-  "atom": {
-    "rewriteTsconfig": false
-  },
-  "typeAcquisition": {
+    "extends": "@tsconfig/node18/tsconfig.json",   
+    "compilerOptions": {
+      "outDir": "./",
+      "rootDir": "./typescript",
+      "strict": false,
+      "inlineSourceMap": true
+    },
+    "exclude": [
+      "node_modules/**",
+      "typings/browser/**",
+      "typings/browser.d.ts",
+      "test/integration/**/*.ts",
+      "angular/**"
+    ],
     "include": [
-      "lodash"
-    ]
-  }
+      "typescript/**/*.ts", 
+    ],
+    "compileOnSave": true,
+    "buildOnSave": false,
+    "atom": {
+        "rewriteTsconfig": false
+    }
 }
-

@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-redbox-gitlab",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "This hook will add functionality to redbox for Gitlab Integration",
   "main": "index.js",
   "sails": {
@@ -15,6 +15,7 @@
   "author": "Moises Sacal",
   "license": "GPL-3.0",
   "dependencies": {
+    "@researchdatabox/redbox-core-types": "^1.4.2",
     "fs-extra": "^8.0.1",
     "lodash": "^4.17.10",
     "ncp": "^2.0.0",
@@ -31,6 +32,6 @@
     "mocha": "^6.1.4",
     "path-exists": "^4.0.0",
     "sails": "^1.0.0",
-    "typescript": ">=2.4.2 <2.7.0"
+    "typescript": "^5.3.3"
   }
 }

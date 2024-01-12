@@ -10,7 +10,7 @@ declare var GitlabService, BrandingService, WorkspaceService;
  * Package that contains all Controllers.
  */
 
-import controller = require('../core/CoreController.js');
+import { Controllers as controllers} from '@researchdatabox/redbox-core-types';
 
 export module Controllers {
 
@@ -18,7 +18,7 @@ export module Controllers {
    * Workspace related features....
    *
    */
-  export class GitlabController extends controller.Controllers.Core.Controller {
+  export class GitlabController extends controllers.Core.Controller {
     /**
      * Exported methods, accessible from internet.
      */
