@@ -18,7 +18,7 @@ export module Controllers {
    * Workspace related features....
    *
    */
-  export class GitlabController extends controllers.Core.Controller {
+  export class Gitlab extends controllers.Core.Controller {
     /**
      * Exported methods, accessible from internet.
      */
@@ -584,4 +584,4 @@ export module Controllers {
   }
 }
 
-module.exports = new Controllers.GitlabController().exports();
+module.exports = new Controllers.Gitlab().exports();

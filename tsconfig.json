@@ -1,10 +1,9 @@
 {
-    "extends": "@tsconfig/node18/tsconfig.json",   
+    "extends": "@tsconfig/node20/tsconfig.json",   
     "compilerOptions": {
       "outDir": "./",
       "rootDir": "./typescript",
-      "strict": false,
-      "inlineSourceMap": true
+      "strict": false
     },
     "exclude": [
       "node_modules/**",

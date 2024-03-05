@@ -6,8 +6,8 @@
   "apps": [
     {
       "name": "gitlab",
-      "root": "src",
-      "outDir": "dist/",
+      "root": "gitlab",
+      "outDir": "../assets/angular/gitlab",
       "assets": [
         "assets",
         "favicon.ico"

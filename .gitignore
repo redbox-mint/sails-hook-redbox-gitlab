@@ -46,3 +46,11 @@ Thumbs.db
 
 test/angular
 api/*
+
+angular-legacy/shared
+assets/angular
+assets/default/default/images/leaflet
+angular-legacy/assets
+angular-legacy/gitlab/shared
+angular-legacy/gitlab/app/shared
+dist/

@@ -3,7 +3,10 @@ module.exports.workspacetype = {
     name: 'gitlab',
     label: 'GitLab',
     subtitle: 'GitLab',
-    description: 'Create or link GitLab workspace:',
-    logo: '/angular/gitlab/assets/images/gitlab.png'
+    description: 'Code repository system with features to help with code management, version control, code review, and collaboration',
+    logo: '/images/gitlab.png',
+    app: {
+      id: 'gitlab'
+    }
   }
 };

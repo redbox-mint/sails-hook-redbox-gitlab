@@ -1,0 +1,15 @@
+module.exports.routes = {
+  'get /:branding/:portal/ws/gitlab/info': 'GitlabController.info',
+  'get /:branding/:portal/ws/gitlab/user': 'GitlabController.user',
+  'post /:branding/:portal/ws/gitlab/token': 'GitlabController.token',
+  'get /:branding/:portal/ws/gitlab/revokeToken': 'GitlabController.revokeToken',
+  'get /:branding/:portal/ws/gitlab/projectsRelatedRecord': 'GitlabController.projectsRelatedRecord',
+  'post /:branding/:portal/ws/gitlab/link': 'GitlabController.link',
+  'post /:branding/:portal/ws/gitlab/checkRepo': 'GitlabController.checkRepo',
+  'post /:branding/:portal/ws/gitlab/create': 'GitlabController.create',
+  'post /:branding/:portal/ws/gitlab/createWithTemplate': 'GitlabController.createWithTemplate',
+  'post /:branding/:portal/ws/gitlab/project': 'GitlabController.project',
+  'post /:branding/:portal/ws/gitlab/updateProject': 'GitlabController.updateProject',
+  'get /:branding/:portal/ws/gitlab/groups':'GitlabController.groups',
+  'get /:branding/:portal/ws/gitlab/templates':'GitlabController.templates',
+};
