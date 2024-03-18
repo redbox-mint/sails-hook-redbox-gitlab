@@ -136,7 +136,8 @@ export class CreateWorkspaceField extends FieldBase<any> {
     this.creation.group = this.groups[0];
     this.templates = [{pathWithNamespace: undefined}];
     this.creation.template = this.templates[0];
-    jQuery('#createModal').modal({show: true, keyboard: false});
+    jQuery('#createModal').modal({ keyboard: false});
+    jQuery('#createModal').modal('show');
     this.gitlabService.groups()
       .then(response => {
         this.groups = this.groups.concat(response);
@@ -204,8 +205,9 @@ export class CreateWorkspaceField extends FieldBase<any> {
           pathWithNamespace: `${this.creation.namespace.path}/${this.creation.name}`,
           currentWorkspace: this.creation, recordMap: this.recordMap})
           .then(response => {
-            if(!response.status) {
-              throw new Error(response.message.description);
+            // raw response from an `updateRecordMeta` api call
+            if(!response.success) {
+              throw new Error(response.message);
             }
             this.creationAlert.set({message: this.workspaceCreated, status: 'done', className: 'success'});
             this.listWorkspaces.emit();
@@ -242,8 +244,9 @@ export class CreateWorkspaceField extends FieldBase<any> {
             currentWorkspace: this.creation, recordMap: this.recordMap
           })
             .then(response => {
-              if(!response.status){
-                throw new Error(response.message.description);
+              // raw response from an `updateRecordMeta` api call
+              if(!response.success) {
+                throw new Error(response.message);
               } else {
                 this.creationAlert.set({message: this.workspaceCreated, status: 'done', className: 'success'});
                 this.listWorkspaces.emit();

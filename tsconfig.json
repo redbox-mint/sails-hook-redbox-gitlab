@@ -1,9 +1,22 @@
 {
-    "extends": "@tsconfig/node20/tsconfig.json",   
     "compilerOptions": {
       "outDir": "./",
       "rootDir": "./typescript",
-      "strict": false
+      "strict": false,
+      "target": "es6",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "isolatedModules": false,
+      "jsx": "react",
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "declaration": false,
+      "noImplicitAny": false,
+      "noImplicitUseStrict": false,
+      "removeComments": true,
+      "noLib": false,
+      "preserveConstEnums": true,
+      "sourceMap": false,
     },
     "exclude": [
       "node_modules/**",
@@ -19,5 +32,10 @@
     "buildOnSave": false,
     "atom": {
         "rewriteTsconfig": false
+    },
+    "typeAcquisition": {
+      "include": [
+        "lodash"
+      ]
     }
 }

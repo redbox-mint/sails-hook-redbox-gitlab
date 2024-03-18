@@ -13,7 +13,7 @@ declare var Institution, User: Model;
 
 export module Services {
 
-  export class GitlabService extends services.Core.Service {
+  export class Gitlab extends services.Core.Service {
 
     protected _exportedMethods: any = [
       'token',
@@ -196,4 +196,4 @@ export module Services {
 
 }
 
-module.exports = new Services.GitlabService().exports();
+module.exports = new Services.Gitlab().exports();

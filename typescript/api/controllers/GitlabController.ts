@@ -5,7 +5,7 @@ declare const Buffer;
 import { Observable, from, throwError } from 'rxjs';
 import * as url from 'url';
 
-declare var GitlabService, BrandingService, WorkspaceService;
+declare var GitlabService, BrandingService, WorkspaceService, RecordsService;
 /**
  * Package that contains all Controllers.
  */
@@ -38,12 +38,7 @@ export module Controllers {
       'updateProject'
     ];
 
-    protected config: any;
-
-    constructor() {
-      super();
-      this.config = new Config();
-    }
+    protected config: any = new Config();
 
     public info(req, res) {
       this.config.set();
@@ -68,24 +63,35 @@ export module Controllers {
             sails.log.debug('infoFormUserId');
             sails.log.debug(response);
             user = response;
-            return GitlabService.token(this.config, username, password);
+            return sails.services.gitlabservice.token(this.config, username, password);
           })
           .flatMap(response => {
             sails.log.debug('token');
             accessToken = response;
             sails.log.debug(accessToken);
-            return GitlabService.user(this.config, accessToken['access_token']);
-          }).flatMap(response => {
+            return sails.services.gitlabservice.user(this.config, accessToken['access_token']);
+          }).flatMap(async (response) => {
             sails.log.debug('gitlab user');
             sails.log.debug(response);
             const gitlabUser = {
               username: response.username,
               id: response.id
             };
-            return WorkspaceService.createWorkspaceInfo(userId, this.config.appName, {
-              user: gitlabUser,
-              accessToken: accessToken
-            });
+            // always updating with the latest token if there's an existing record)
+            const existingWorkspaceInfo = await WorkspaceService.workspaceAppFromUserId(userId, this.config.appName).toPromise();
+            sails.log.verbose(`Existing workspace app info: ${JSON.stringify(existingWorkspaceInfo)}`);
+            if (!_.isEmpty(existingWorkspaceInfo)) {
+              existingWorkspaceInfo.info.accessToken = accessToken;
+              sails.log.verbose(`Updating workspace info with: ${JSON.stringify(existingWorkspaceInfo.info)}`);
+              const retval = await WorkspaceService.updateWorkspaceInfo(existingWorkspaceInfo.id, existingWorkspaceInfo.info).toPromise();
+              sails.log.verbose(`Updated workspace info: ${JSON.stringify(retval)}`);
+              return retval;
+            } else {
+              return WorkspaceService.createWorkspaceInfo(userId, this.config.appName,  {
+                user: gitlabUser,
+                accessToken: accessToken
+              });
+            }
           })
           .subscribe(response => {
             sails.log.debug('createWorkspaceInfo');
@@ -138,7 +144,7 @@ export module Controllers {
               return throwError('no workspace app found');
             }
             gitlab = response.info;
-            return GitlabService.user(this.config, gitlab['accessToken'].access_token)
+            return sails.services.gitlabservice.user(this.config, gitlab['accessToken'].access_token)
           }).subscribe(response => {
             response.status = true;
             this.ajaxOk(req, res, null, {status: true, user: gitlab['user']});
@@ -168,7 +174,7 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             gitlab = response.info;
-            return GitlabService.projects({
+            return sails.services.gitlabservice.projects({
               config: this.config,
               token: gitlab['accessToken'].access_token,
               page: page,
@@ -181,7 +187,7 @@ export module Controllers {
             let obs = [];
             currentProjects = data.slice(0);
             for (let r of currentProjects) {
-              obs.push(GitlabService.readFileFromRepo(this.config, gitlab['accessToken'].access_token, branch, r.path_with_namespace, 'stash.workspace'));
+              obs.push(sails.services.gitlabservice.readFileFromRepo(this.config, gitlab['accessToken'].access_token, branch, r.path_with_namespace, 'stash.workspace'));
             }
             return Observable.merge(...obs);
           })
@@ -248,9 +254,10 @@ export module Controllers {
             const username = req.user.username;
             return WorkspaceService.createWorkspaceRecord(this.config, username, record, this.config.recordType, this.config.workflowStage);
           }).flatMap(response => {
-            workspaceId = response.oid;
+            // FIXED: response is now an Axios response, adding '.data' path
+            workspaceId = response.data.oid;
             sails.log.debug('addWorkspaceInfo');
-            return GitlabService.addWorkspaceInfo({
+            return sails.services.gitlabservice.addWorkspaceInfo({
               config: this.config, token: gitlab['accessToken'].access_token,
               branch: branch, pathWithNamespace: pathWithNamespace,
               project: project, workspaceLink: rdmpId + '.' + workspaceId,
@@ -258,27 +265,19 @@ export module Controllers {
             });
           }).flatMap(() => {
             sails.log.debug('addWorkspaceInfo:Pretty');
-            return GitlabService.addWorkspaceInfo({
+            return sails.services.gitlabservice.addWorkspaceInfo({
               config: this.config, token: gitlab['accessToken'].access_token,
               branch: branch, pathWithNamespace: pathWithNamespace,
               project: project,
               workspaceLink: `Workspace linked to [${rdmpTitle}](${this.config.brandingAndPortalUrl}/record/view/${rdmpId}) in Stash`,
               filePath: 'stash.md'
             });
-          }).flatMap(() => {
-            sails.log.debug('addParentRecordLink');
-            if (recordMetadata.workspaces) {
-              const wss = recordMetadata.workspaces.find(id => workspaceId === id);
-              if (!wss) {
-                recordMetadata.workspaces.push({id: workspaceId});
-              }
-            }
-            return WorkspaceService.updateRecordMeta(this.config, recordMetadata, rdmpId);
-          })
+          }) // removed the "addParentRecord" step as this the postSaveTrigger will look after linking the record
           .subscribe(response => {
             sails.log.debug('updateRecordMeta');
             sails.log.debug(response);
             response.status = true;
+            // changed to data to avoid circular reference
             this.ajaxOk(req, res, null, response);
           }, error => {
             sails.log.error(error);
@@ -302,7 +301,7 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             const gitlab = response.info;
-            return GitlabService.readFileFromRepo(this.config, gitlab.accessToken.access_token, branch, fieldToCheck, 'stash.workspace');
+            return sails.services.gitlabservice.readFileFromRepo(this.config, gitlab.accessToken.access_token, branch, fieldToCheck, 'stash.workspace');
           }).subscribe(response => {
             sails.log.debug('checkLink:getRecordMeta');
             const parsedResponse = this.parseResponseFromRepo(response);
@@ -368,7 +367,7 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             const gitlab = response.info;
-            return GitlabService.create(this.config, gitlab.accessToken.access_token, creation, group);
+            return sails.services.gitlabservice.create(this.config, gitlab.accessToken.access_token, creation, group);
           }).subscribe(response => {
             sails.log.debug('updateRecordMeta');
             response.status = true;
@@ -394,7 +393,7 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             const gitlab = response.info;
-            return GitlabService.fork(this.config, gitlab.accessToken.access_token, creation);
+            return sails.services.gitlabservice.fork(this.config, gitlab.accessToken.access_token, creation);
           }).subscribe(response => {
             sails.log.debug('fork');
             response.status = true;
@@ -428,7 +427,7 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             const gitlab = response.info;
-            return GitlabService.updateProject(this.config, gitlab.accessToken.access_token, projectId, project);
+            return sails.services.gitlabservice.updateProject(this.config, gitlab.accessToken.access_token, projectId, project);
           }).subscribe(response => {
             sails.log.debug('updateProject');
             response.status = true;
@@ -454,7 +453,7 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             const gitlab = response.info;
-            return GitlabService.project({
+            return sails.services.gitlabservice.project({
               config: this.config,
               token: gitlab.accessToken.access_token,
               pathWithNamespace: pathWithNamespace
@@ -482,7 +481,7 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             const gitlab = response.info;
-            return GitlabService.templates(this.config, gitlab.accessToken.access_token, 'provisioner_template');
+            return sails.services.gitlabservice.templates(this.config, gitlab.accessToken.access_token, 'provisioner_template');
           }).subscribe(response => {
             let simple = [];
             if (response.value) {
@@ -509,7 +508,7 @@ export module Controllers {
         return WorkspaceService.workspaceAppFromUserId(userId, this.config.appName)
           .flatMap(response => {
             const gitlab = response.info;
-            return GitlabService.groups(this.config, gitlab.accessToken.access_token)
+            return sails.services.gitlabservice.groups(this.config, gitlab.accessToken.access_token)
           }).subscribe(response => {
             sails.log.debug('groups');
             this.ajaxOk(req, res, null, response);
