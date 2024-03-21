@@ -18,9 +18,9 @@ module.exports = {
    ***************************************************************************/
 
   workspaces: {
-    portal: {
-      authorization: 'Bearer 123123'
-    },
+    // portal: {
+    //   authorization: 'Bearer 123123'
+    // },
     provisionerUser: 'admin',
     parentRecord: 'rdmp',
     gitlab: {
