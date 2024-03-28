@@ -30,7 +30,7 @@ module.exports = {
       appName: 'gitlab',
       appId: 'git-test',
       recordType: 'gitlab',
-      host: 'https://git-test.research.uts.edu.au',
+      host: '',
     }
   }
 };

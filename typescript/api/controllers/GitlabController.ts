@@ -255,7 +255,7 @@ export module Controllers {
             return WorkspaceService.createWorkspaceRecord(this.config, username, record, this.config.recordType, this.config.workflowStage);
           }).flatMap(response => {
             // FIXED: response is now an Axios response, adding '.data' path
-            workspaceId = response.data.oid;
+            workspaceId = response.data.workspaceOid;
             sails.log.debug('addWorkspaceInfo');
             return sails.services.gitlabservice.addWorkspaceInfo({
               config: this.config, token: gitlab['accessToken'].access_token,

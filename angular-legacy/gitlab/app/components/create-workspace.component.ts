@@ -206,7 +206,7 @@ export class CreateWorkspaceField extends FieldBase<any> {
           currentWorkspace: this.creation, recordMap: this.recordMap})
           .then(response => {
             // raw response from an `updateRecordMeta` api call
-            if(!response.success) {
+            if(!response.status) {
               throw new Error(response.message);
             }
             this.creationAlert.set({message: this.workspaceCreated, status: 'done', className: 'success'});
