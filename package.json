@@ -1,6 +1,6 @@
 {
   "name": "@researchdatabox/sails-hook-redbox-gitlab",
-  "version": "0.0.2-prerelease",
+  "version": "0.0.3-prerelease",
   "description": "This hook will add functionality to redbox for Gitlab Integration",
   "main": "index.js",
   "sails": {
@@ -8,12 +8,14 @@
     "hookName": "gitlab"
   },
   "scripts": {
-    "test": "NODE_ENV=test node_modules/.bin/mocha",
-    "copyng": "cp -rf ./app/gitlab/dist /opt/redbox-portal/.tmp/public/angular/gitlab",
-    "compile": "node_modules/.bin/tsc --project tsconfig.json"
+    "test": "NODE_ENV=test node_modules/.bin/mocha"
   },
-  "author": "Moises Sacal",
+  "author": "QCIF Engineering",
   "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/redbox-mint/sails-hook-redbox-gitlab"
+  },
   "dependencies": {
     "@researchdatabox/redbox-core-types": "^1.4.2",
     "fs-extra": "^8.0.1",

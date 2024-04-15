@@ -2,7 +2,7 @@ declare var module, _;
 declare var sails, Model;
 declare const Buffer;
 
-import { Observable, from, throwError } from 'rxjs';
+import { Observable, from, throwError, merge } from 'rxjs';
 import * as url from 'url';
 
 declare var GitlabService, BrandingService, WorkspaceService, RecordsService;
@@ -182,14 +182,21 @@ export module Controllers {
             })
           })
           .flatMap(response => {
-            projectHeaders = response.headers;
-            const data = response.body;
-            let obs = [];
-            currentProjects = data.slice(0);
-            for (let r of currentProjects) {
-              obs.push(sails.services.gitlabservice.readFileFromRepo(this.config, gitlab['accessToken'].access_token, branch, r.path_with_namespace, 'stash.workspace'));
+            if (response.statusCode == 200) {
+              projectHeaders = response.headers;
+              const data = response.body;
+              let obs = [];
+              currentProjects = data.slice(0);
+              for (let r of currentProjects) {
+                obs.push(sails.services.gitlabservice.readFileFromRepo(this.config, gitlab['accessToken'].access_token, branch, r.path_with_namespace, 'stash.workspace'));
+              }
+              return merge(...obs);
+            } else {
+              sails.log.verbose(response);
+              const errmsg = `Failed to list Gitlab projects, API status code not '200' for user: ${userId}`;
+              sails.log.error(errmsg);
+              throwError(errmsg);
             }
-            return Observable.merge(...obs);
           })
           .subscribe(response => {
             const parsedResponse = this.parseResponseFromRepo(response);
@@ -198,6 +205,7 @@ export module Controllers {
               info: parsedResponse.content ? this.workspaceInfoFromRepo(parsedResponse.content) : {}
             });
           }, error => {
+            sails.log.error(error);
             const errorMessage = `Failed to get projectsRelatedRecord for token: ${gitlab['accessToken'].access_token}`;
             sails.log.debug(errorMessage);
             this.ajaxFail(req, res, errorMessage, error);
