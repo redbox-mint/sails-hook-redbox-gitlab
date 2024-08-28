@@ -87,10 +87,10 @@ export module Controllers {
               sails.log.verbose(`Updated workspace info: ${JSON.stringify(retval)}`);
               return retval;
             } else {
-              return WorkspaceService.createWorkspaceInfo(userId, this.config.appName,  {
+              return await WorkspaceService.createWorkspaceInfo(userId, this.config.appName,  {
                 user: gitlabUser,
                 accessToken: accessToken
-              });
+              }).toPromise();
             }
           })
           .subscribe(response => {
