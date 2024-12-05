@@ -4,7 +4,7 @@ import {catchError} from 'rxjs/operators/catchError';
 import {Sails, Model} from "sails";
 import * as requestPromise from "request-promise";
 
-import services = require('../core/CoreService.js');
+import { Services as services } from '@researchdatabox/redbox-core-types';
 
 declare var RecordsService, BrandingService;
 declare var sails: Sails;
@@ -13,7 +13,7 @@ declare var Institution, User: Model;
 
 export module Services {
 
-  export class GitlabService extends services.Services.Core.Service {
+  export class Gitlab extends services.Core.Service {
 
     protected _exportedMethods: any = [
       'token',
@@ -196,4 +196,4 @@ export module Services {
 
 }
 
-module.exports = new Services.GitlabService().exports();
+module.exports = new Services.Gitlab().exports();

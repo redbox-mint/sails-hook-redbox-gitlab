@@ -1,6 +1,8 @@
 module.exports.recordtype = {
   "gitlab": {
+    "searchable": false,
     "packageType": "workspace",
+    "packageName": "gitlab",
     searchFilters: [
       {
         name: "text_title",
@@ -35,6 +37,19 @@ module.exports.recordtype = {
         typeLabel: null,
         alwaysActive: true
       }
-    ]
+    ],
+    hooks: {
+      onCreate: {
+        pre: [
+        ],
+        postSync: [
+          {
+            function: 'sails.services.rdmpservice.addWorkspaceToRecord',
+            options: {
+            }
+          }
+        ]
+      }
+    }
   }
 };

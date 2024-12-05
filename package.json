@@ -1,5 +1,5 @@
 {
-  "name": "sails-hook-redbox-gitlab",
+  "name": "@researchdatabox/sails-hook-redbox-gitlab",
   "version": "1.0.0",
   "description": "This hook will add functionality to redbox for Gitlab Integration",
   "main": "index.js",
@@ -8,13 +8,16 @@
     "hookName": "gitlab"
   },
   "scripts": {
-    "test": "NODE_ENV=test node_modules/.bin/mocha",
-    "copyng": "cp -rf ./app/gitlab/dist /opt/redbox-portal/.tmp/public/angular/gitlab",
-    "compile": "node_modules/.bin/tsc --project tsconfig.json"
+    "test": "NODE_ENV=test node_modules/.bin/mocha"
   },
-  "author": "Moises Sacal",
+  "author": "QCIF Engineering",
   "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/redbox-mint/sails-hook-redbox-gitlab"
+  },
   "dependencies": {
+    "@researchdatabox/redbox-core-types": "^1.4.2",
     "fs-extra": "^8.0.1",
     "lodash": "^4.17.10",
     "ncp": "^2.0.0",
@@ -26,11 +29,13 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
-    "@types/node": "^12.0.8",
-    "@types/lodash": "^4.14.134",
+    "@tsconfig/node20": "^20.1.2",
+    "@types/node": "^20.11.19",
     "mocha": "^6.1.4",
     "path-exists": "^4.0.0",
-    "sails": "^1.0.0",
-    "typescript": ">=2.4.2 <2.7.0"
+    "rxjs": "^6.2.0",
+    "rxjs-compat": "^6.2.0",
+    "sails": "^1.5.9",
+    "typescript": "5.2"
   }
 }
